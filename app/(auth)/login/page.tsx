@@ -3,7 +3,10 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { AtSymbolIcon, KeyIcon, ExclamationCircleIcon } from '@heroicons/react/24/outline';
+import { AtSymbolIcon, KeyIcon, ExclamationCircleIcon, ArrowRightIcon } from '@heroicons/react/24/outline';
+import Image from 'next/image';
+import { FcGoogle } from 'react-icons/fc';
+import { FaGithub } from 'react-icons/fa';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -13,13 +16,13 @@ export default function LoginPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     // Validación básica
     if (!email.includes('@')) {
       setError('Email no válido');
       return;
     }
-    
+
     if (password.length < 6) {
       setError('La contraseña debe tener al menos 6 caracteres');
       return;
@@ -31,105 +34,130 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4">
-      <div className="w-full max-w-md space-y-8 rounded-xl bg-white p-8 shadow-lg">
-        <div className="text-center">
-          <h2 className="text-3xl font-bold text-gray-900">Iniciar Sesión</h2>
-          <p className="mt-2 text-gray-600">
-            Accede a tu cuenta para gestionar tus servicios
-          </p>
-        </div>
+    <div className="flex min-h-screen">
+      {/* Sección izquierda (Formulario) */}
+      <div className="w-full lg:w-1/2 flex items-center justify-center p-8 bg-white">
+        <div className="w-full max-w-md">
+          <h1 className="text-3xl font-bold text-blue-900 mb-6">Iniciar Sesión</h1>
 
-        {error && (
-          <div className="flex items-center rounded-md bg-red-50 p-4 text-red-600">
-            <ExclamationCircleIcon className="mr-2 h-5 w-5" />
-            <span>{error}</span>
-          </div>
-        )}
+          {error && (
+            <div className="flex items-center gap-2 mb-4 p-3 bg-red-50 text-red-600 rounded-lg">
+              <ExclamationCircleIcon className="h-5 w-5" />
+              <span>{error}</span>
+            </div>
+          )}
 
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-          <div className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-5">
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                Correo Electrónico
-              </label>
-              <div className="relative mt-1">
-                <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                  <AtSymbolIcon className="h-5 w-5 text-gray-400" />
+              <label className="block text-sm font-bold text-gray-700 mb-1">Correo electrónico</label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 flex items-center pl-3">
+                  <AtSymbolIcon className="h-5 w-5 text-gray-500" />
                 </div>
                 <input
-                  id="email"
-                  name="email"
                   type="email"
-                  autoComplete="email"
-                  required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="block w-full rounded-md border-gray-300 pl-10 focus:border-blue-500 focus:ring-blue-500 sm:text-sm py-2"
-                  placeholder="tu@email.com"
+                  className="w-full pl-10 pr-3 py-2 border border-gray-600 rounded-lg 
+                    placeholder-gray-400 
+                    text-gray-900 bg-white
+                    disabled:text-gray-400 disabled:bg-gray-50"
+                  placeholder="name@email.com"
+                  required
                 />
               </div>
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-                Contraseña
-              </label>
-              <div className="relative mt-1">
-                <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                  <KeyIcon className="h-5 w-5 text-gray-400" />
+              <label className="block text-sm font-bold text-gray-700 mb-1">Contraseña</label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 flex items-center pl-3">
+                  <KeyIcon className="h-5 w-5 text-gray-500" />
                 </div>
                 <input
-                  id="password"
-                  name="password"
                   type="password"
-                  autoComplete="current-password"
-                  required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="block w-full rounded-md border-gray-300 pl-10 focus:border-blue-500 focus:ring-blue-500 sm:text-sm py-2"
+                  className="w-full pl-10 pr-3 py-2 border border-gray-600 rounded-lg 
+                    placeholder-gray-400 
+                    text-gray-900 bg-white
+                    disabled:text-gray-400 disabled:bg-gray-50"
                   placeholder="••••••••"
+                  required
                 />
               </div>
             </div>
-          </div>
 
-          <div className="flex items-center justify-between">
-            <div className="flex items-center">
-              <input
-                id="remember-me"
-                name="remember-me"
-                type="checkbox"
-                className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-              />
-              <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900">
-                Recuérdame
-              </label>
-            </div>
-
-            <div className="text-sm">
-              <Link href="/forgot-password" className="font-medium text-blue-600 hover:text-blue-500">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center">
+                <input
+                  id="remember"
+                  type="checkbox"
+                  className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                />
+                <label htmlFor="remember" className="ml-2 block text-sm text-gray-700">
+                  Recuérdame
+                </label>
+              </div>
+              <Link href="/forgot-password" className="text-sm text-blue-600 hover:underline">
                 ¿Olvidaste tu contraseña?
               </Link>
             </div>
-          </div>
 
-          <div>
             <button
               type="submit"
-              className="group relative flex w-full justify-center rounded-md border border-transparent bg-blue-600 py-2 px-4 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+              className="w-full bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 transition-colors focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 mb-6"
             >
-              Ingresar
+              Iniciar sesión
+            </button>
+          </form>
+
+          {/* Separador */}
+          <div className="relative mb-6">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-gray-300"></div>
+            </div>
+            <div className="relative flex justify-center text-sm">
+              <span className="px-2 bg-white text-gray-500">ó continuar con</span>
+            </div>
+          </div>
+
+          {/* Botones Sociales */}
+          <div className="grid grid-cols-2 gap-3">
+            <button
+              type="button"
+              className="w-full flex items-center justify-center gap-2 bg-white border border-gray-300 text-gray-700 py-2 px-4 rounded-lg hover:bg-gray-50 transition-colors"
+            >
+              <FcGoogle className="h-5 w-5" />
+              Google
+            </button>
+            <button
+              type="button"
+              className="w-full flex items-center justify-center gap-2 bg-white border border-gray-300 text-gray-700 py-2 px-4 rounded-lg hover:bg-gray-50 transition-colors"
+            >
+              <FaGithub className="h-5 w-5" />
+              GitHub
             </button>
           </div>
-        </form>
 
-        <div className="text-center text-sm text-gray-600">
-          ¿No tienes cuenta?{' '}
-          <Link href="/register" className="font-medium text-blue-600 hover:text-blue-500">
-            Regístrate aquí
-          </Link>
+          <div className="mt-6 text-end text-sm text-gray-600">
+            ¿No tienes cuenta?{' '}
+            <Link href="/register" className="font-medium text-blue-600 hover:underline">
+              Regístrate
+            </Link>
+          </div>
         </div>
+      </div>
+
+      {/* Sección derecha (Imagen) */}
+      <div className="hidden lg:block lg:w-1/2 relative bg-gray-100">
+        <Image
+          src="/images/login.png"
+          alt="Ilustración de trabajo"
+          fill
+          className="object-cover"
+          priority
+        />
       </div>
     </div>
   );
