@@ -30,7 +30,7 @@ export default function LoginPage() {
 
     // Simular autenticación (reemplazar con tu lógica real)
     console.log('Credenciales:', { email, password });
-    router.push('/dashboard'); // Redirigir tras login
+router.push('/cliente/home');
   };
 
   return (
@@ -47,7 +47,7 @@ export default function LoginPage() {
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-5">
+          <form onSubmit={handleSubmit} className="space-y-6">
             <div>
               <label className="block text-sm font-bold text-gray-700 mb-1">Correo electrónico</label>
               <div className="relative">
