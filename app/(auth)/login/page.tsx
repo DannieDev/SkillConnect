@@ -1,4 +1,4 @@
-'use client'; // Necesario para hooks y eventos
+'use client';
 
 import { useState } from 'react';
 import Link from 'next/link';
