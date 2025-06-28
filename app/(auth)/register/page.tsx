@@ -1,207 +1,191 @@
-'use client'; // Necesario para hooks y formularios
+'use client';
 
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { 
-  UserIcon, 
-  AtSymbolIcon, 
-  KeyIcon, 
-  PhoneIcon, 
-  BriefcaseIcon,
-  ExclamationCircleIcon 
+import {
+  AtSymbolIcon,
+  KeyIcon,
+  UserIcon,
+  ExclamationCircleIcon,
 } from '@heroicons/react/24/outline';
+import { FcGoogle } from 'react-icons/fc';
+import { FaGithub } from 'react-icons/fa';
+import Image from 'next/image';
 
 export default function RegisterPage() {
-  const [formData, setFormData] = useState({
-    name: '',
+  const [form, setForm] = useState({
+    nombres: '',
+    apellidos: '',
     email: '',
     password: '',
-    phone: '',
-    userType: 'client' // 'client' o 'worker'
+    confirmPassword: '',
+    role: 'cliente',
   });
   const [error, setError] = useState('');
   const router = useRouter();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    // Validación
-    if (formData.password.length < 6) {
-      setError('La contraseña debe tener al menos 6 caracteres');
-      return;
-    }
-
-    if (!formData.email.includes('@')) {
-      setError('Email no válido');
-      return;
-    }
-
-    // Simular registro (reemplazar con tu API)
-    console.log('Datos de registro:', formData);
-    router.push('/dashboard'); // Redirigir tras registro exitoso
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
+    const { name, value } = e.target;
+    setForm({ ...form, [name]: value });
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+  const handleRoleSelect = (role: string) => {
+    setForm({ ...form, role });
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (
+      !form.nombres ||
+      !form.apellidos ||
+      !form.email ||
+      !form.password ||
+      form.password !== form.confirmPassword
+    ) {
+      setError('Completa todos los campos y asegúrate que las contraseñas coincidan');
+      return;
+    }
+
+    console.log('Registro:', form);
+    router.push('/login');
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4 py-12">
-      <div className="w-full max-w-md rounded-xl bg-white p-8 shadow-lg">
-        <div className="text-center">
-          <h2 className="text-3xl font-bold text-gray-900">Crear Cuenta</h2>
-          <p className="mt-2 text-gray-600">
-            Únete a nuestra plataforma en menos de 2 minutos
-          </p>
-        </div>
+    <div className="flex min-h-screen">
+      {/* Sección izquierda (Formulario) */}
+        <div className="w-full lg:w-1/2 flex items-center justify-center min-h-screen p-8 bg-white">
+<div className="w-full max-w-md h-[80vh] flex flex-col justify-center">
+          <h1 className="text-3xl font-bold text-blue-900 mb-6">Crear Cuenta</h1>
 
-        {error && (
-          <div className="mt-4 flex items-center rounded-md bg-red-50 p-4 text-red-600">
-            <ExclamationCircleIcon className="mr-2 h-5 w-5" />
-            <span>{error}</span>
-          </div>
-        )}
+          {error && (
+            <div className="flex items-center gap-2 mb-4 p-3 bg-red-50 text-red-600 rounded-lg text-sm">
+              <ExclamationCircleIcon className="h-5 w-5" />
+              <span>{error}</span>
+            </div>
+          )}
 
-        <form className="mt-8 space-y-5" onSubmit={handleSubmit}>
-          <div>
-            <label htmlFor="name" className="block text-sm font-medium text-gray-700">
-              Nombre Completo
-            </label>
-            <div className="relative mt-1">
-              <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                <UserIcon className="h-5 w-5 text-gray-400" />
-              </div>
+          <form onSubmit={handleSubmit} className="space-y-7">
+            <div className="flex gap-2">
               <input
-                id="name"
-                name="name"
                 type="text"
-                required
-                value={formData.name}
+                name="nombres"
+                placeholder="Nombre(s)"
+                value={form.nombres}
                 onChange={handleChange}
-                className="block w-full rounded-md border-gray-300 pl-10 focus:border-blue-500 focus:ring-blue-500 sm:text-sm py-2"
-                placeholder="Juan Pérez"
+                className="w-1/2 px-4 py-2 border border-gray-800 rounded-lg"
+                required
               />
-            </div>
-          </div>
-
-          <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-              Correo Electrónico
-            </label>
-            <div className="relative mt-1">
-              <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                <AtSymbolIcon className="h-5 w-5 text-gray-400" />
-              </div>
               <input
-                id="email"
-                name="email"
-                type="email"
-                autoComplete="email"
-                required
-                value={formData.email}
+                type="text"
+                name="apellidos"
+                placeholder="Apellidos"
+                value={form.apellidos}
                 onChange={handleChange}
-                className="block w-full rounded-md border-gray-300 pl-10 focus:border-blue-500 focus:ring-blue-500 sm:text-sm py-2"
-                placeholder="tu@email.com"
+                className="w-1/2 px-4 py-2 border border-gray-800 rounded-lg"
+                required
               />
             </div>
-          </div>
 
-          <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-              Contraseña
-            </label>
-            <div className="relative mt-1">
-              <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                <KeyIcon className="h-5 w-5 text-gray-400" />
-              </div>
-              <input
-                id="password"
-                name="password"
-                type="password"
-                autoComplete="new-password"
-                required
-                value={formData.password}
-                onChange={handleChange}
-                className="block w-full rounded-md border-gray-300 pl-10 focus:border-blue-500 focus:ring-blue-500 sm:text-sm py-2"
-                placeholder="••••••••"
-              />
-            </div>
-            <p className="mt-1 text-xs text-gray-500">Mínimo 6 caracteres</p>
-          </div>
-
-          <div>
-            <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
-              Teléfono
-            </label>
-            <div className="relative mt-1">
-              <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                <PhoneIcon className="h-5 w-5 text-gray-400" />
-              </div>
-              <input
-                id="phone"
-                name="phone"
-                type="tel"
-                value={formData.phone}
-                onChange={handleChange}
-                className="block w-full rounded-md border-gray-300 pl-10 focus:border-blue-500 focus:ring-blue-500 sm:text-sm py-2"
-                placeholder="+52 55 1234 5678"
-              />
-            </div>
-          </div>
-
-          <div>
-            <label htmlFor="userType" className="block text-sm font-medium text-gray-700">
-              Tipo de Usuario
-            </label>
-            <div className="relative mt-1">
-              <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                <BriefcaseIcon className="h-5 w-5 text-gray-400" />
-              </div>
-              <select
-                id="userType"
-                name="userType"
-                required
-                value={formData.userType}
-                onChange={handleChange}
-                className="block w-full rounded-md border-gray-300 pl-10 focus:border-blue-500 focus:ring-blue-500 sm:text-sm py-2 appearance-none bg-white"
-              >
-                <option value="client">Cliente (Busco servicios)</option>
-                <option value="worker">Trabajador (Ofrezco servicios)</option>
-              </select>
-            </div>
-          </div>
-
-          <div className="flex items-center">
             <input
-              id="terms"
-              name="terms"
-              type="checkbox"
+              type="email"
+              name="email"
+              placeholder="Email"
+              value={form.email}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border border-gray-800 rounded-lg"
               required
-              className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
             />
-            <label htmlFor="terms" className="ml-2 block text-sm text-gray-700">
-              Acepto los <Link href="/terms" className="text-blue-600 hover:underline">Términos de Servicio</Link>
-            </label>
-          </div>
 
-          <div>
+            <input
+              type="password"
+              name="password"
+              placeholder="Contraseña"
+              value={form.password}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border border-gray-800 rounded-lg"
+              required
+            />
+
+            <input
+              type="password"
+              name="confirmPassword"
+              placeholder="Confirmar Contraseña"
+              value={form.confirmPassword}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border border-gray-800 rounded-lg"
+              required
+            />
+
+            <div className="text-center text-sm font-medium text-gray-700">Continuar como</div>
+            <div className="flex justify-between gap-4">
+              <button
+                type="button"
+                onClick={() => handleRoleSelect('trabajador')}
+                className={`w-1/2 px-4 py-2 border rounded-lg ${
+                  form.role === 'trabajador'
+                    ? 'bg-blue-100 border-blue-900'
+                    : 'hover:bg-gray-100 border-gray-800'
+                }`}
+              >
+                Trabajador
+              </button>
+              <button
+                type="button"
+                onClick={() => handleRoleSelect('cliente')}
+                className={`w-1/2 px-4 py-2 border rounded-lg ${
+                  form.role === 'cliente'
+                    ? 'bg-blue-100 border-blue-900'
+                    : 'hover:bg-gray-100 border-gray-800'
+                }`}
+              >
+                Cliente
+              </button>
+            </div>
+
             <button
               type="submit"
-              className="group relative flex w-full justify-center rounded-md border border-transparent bg-blue-600 py-2 px-4 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
+              className="w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 transition-colors"
             >
-              Crear Cuenta
+              Registrarme
+            </button>
+          </form>
+
+          <div className="flex items-center my-4">
+            <hr className="flex-grow border-gray-300" />
+            <span className="mx-2 text-sm text-gray-500">ó continuar con</span>
+            <hr className="flex-grow border-gray-300" />
+          </div>
+
+          <div className="flex gap-4">
+            <button className="w-1/2 border px-4 py-2 rounded-lg flex items-center justify-center gap-2 hover:bg-gray-50">
+              <FcGoogle className="h-5 w-5" /> Google
+            </button>
+            <button className="w-1/2 border px-4 py-2 rounded-lg flex items-center justify-center gap-2 hover:bg-gray-50">
+              <FaGithub className="h-5 w-5" /> GitHub
             </button>
           </div>
-        </form>
 
-        <div className="mt-6 text-center text-sm text-gray-600">
-          ¿Ya tienes una cuenta?{' '}
-          <Link href="/login" className="font-medium text-blue-600 hover:text-blue-500">
-            Inicia Sesión
-          </Link>
+          <div className="mt-6 text-end text-sm text-gray-600">
+            ¿Ya tienes cuenta?{' '}
+            <Link href="/login" className="text-blue-600 font-medium hover:underline">
+              Iniciar Sesión
+            </Link>
+          </div>
         </div>
+      </div>
+
+      {/* Sección derecha (Imagen) */}
+      <div className="hidden lg:block lg:w-1/2 relative bg-gray-100">
+        <Image
+          src="/images/register.png" // o cambia a register.png si prefieres otra imagen
+          alt="Registro"
+          fill
+          className="object-cover"
+          priority
+        />
       </div>
     </div>
   );
