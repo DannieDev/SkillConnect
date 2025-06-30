@@ -37,7 +37,7 @@ router.push('/cliente/home');
     <div className="flex min-h-screen">
       {/* Sección izquierda (Formulario) */}
       <div className="w-full lg:w-1/2 flex items-center justify-center p-8 bg-white">
-        <div className="w-full max-w-md">
+<div className="w-full max-w-sm scale-[0.82]">
           <h1 className="text-3xl font-bold text-blue-900 mb-6">Iniciar Sesión</h1>
 
           {error && (
