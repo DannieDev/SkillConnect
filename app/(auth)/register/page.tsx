@@ -26,7 +26,29 @@ export default function RegisterPage() {
 
   const router = useRouter();
 
-    const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!email.includes('@')) {
+      setError('Correo electrónico no válido');
+      return;
+    }
+
+    if (password.length < 6) {
+      setError('La contraseña debe tener al menos 6 caracteres');
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      setError('Las contraseñas no coinciden');
+      return;
+    }
+
+    // Simulación de registro sin backend
+    localStorage.setItem('rol', rol);
+
+    alert('Cuenta creada exitosamente. Por favor inicia sesión.');
+    router.push('/login');
   };
 
   return (

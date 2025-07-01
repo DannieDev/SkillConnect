@@ -19,7 +19,27 @@ export default function LoginPage() {
   const [error, setError] = useState('');
   const router = useRouter();
 
-  const handleSubmit = (e: React.FormEvent) => {
+ const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!email.includes('@')) {
+      setError('Email no válido');
+      return;
+    }
+
+    if (password.length < 6) {
+      setError('La contraseña debe tener al menos 6 caracteres');
+      return;
+    }
+
+    // Simular autenticación
+    const rol = localStorage.getItem('rol');
+
+    if (rol === 'trabajador') {
+      router.push('/trabajador');
+    } else {
+      router.push('/cliente/home'); // cliente o valor por defecto
+    }
   };
 
   return (
