@@ -3,7 +3,12 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { AtSymbolIcon, KeyIcon, ExclamationCircleIcon, ArrowRightIcon } from '@heroicons/react/24/outline';
+import {
+  AtSymbolIcon,
+  KeyIcon,
+  ExclamationCircleIcon,
+  ArrowRightIcon
+} from '@heroicons/react/24/outline';
 import Image from 'next/image';
 import { FcGoogle } from 'react-icons/fc';
 import { FaGithub } from 'react-icons/fa';
@@ -14,53 +19,14 @@ export default function LoginPage() {
   const [error, setError] = useState('');
   const router = useRouter();
 
-const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
-  setError('');
-
-  if (!email.includes('@')) {
-    setError('Email no válido');
-    return;
-  }
-
-  if (password.length < 6) {
-    setError('La contraseña debe tener al menos 6 caracteres');
-    return;
-  }
-
-  try {
-    const res = await fetch('/api/auth/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        email,
-        password,
-        tipo: 'cliente' // o 'trabajador' según sea el caso
-      }),
-    });
-
-    const data = await res.json();
-
-    if (!res.ok) {
-      setError(data.error || 'Error al iniciar sesión');
-      return;
-    }
-
-    // Guardar token en localStorage (opcional)
-    localStorage.setItem('token', data.token);
-
-    // Redirigir según el tipo
-    router.push('/cliente/home'); // o '/trabajador' según el tipo
-  } catch (err) {
-    setError('Error de conexión con el servidor');
-  }
-};
+  const handleSubmit = (e: React.FormEvent) => {
+  };
 
   return (
     <div className="flex min-h-screen">
-      {/* Sección izquierda (Formulario) */}
+      {/* Sección izquierda */}
       <div className="w-full lg:w-1/2 flex items-center justify-center p-8 bg-white">
-<div className="w-full max-w-sm scale-[0.82]">
+        <div className="w-full max-w-sm scale-[0.82]">
           <h1 className="text-3xl font-bold text-blue-900 mb-6">Iniciar Sesión</h1>
 
           {error && (
@@ -81,10 +47,7 @@ const handleSubmit = async (e: React.FormEvent) => {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full pl-10 pr-3 py-2 border border-gray-600 rounded-lg 
-                    placeholder-gray-400 
-                    text-gray-900 bg-white
-                    disabled:text-gray-400 disabled:bg-gray-50"
+                  className="w-full pl-10 pr-3 py-2 border border-gray-600 rounded-lg placeholder-gray-400 text-gray-900 bg-white"
                   placeholder="name@email.com"
                   required
                 />
@@ -101,10 +64,7 @@ const handleSubmit = async (e: React.FormEvent) => {
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full pl-10 pr-3 py-2 border border-gray-600 rounded-lg 
-                    placeholder-gray-400 
-                    text-gray-900 bg-white
-                    disabled:text-gray-400 disabled:bg-gray-50"
+                  className="w-full pl-10 pr-3 py-2 border border-gray-600 rounded-lg placeholder-gray-400 text-gray-900 bg-white"
                   placeholder="••••••••"
                   required
                 />
@@ -135,7 +95,6 @@ const handleSubmit = async (e: React.FormEvent) => {
             </button>
           </form>
 
-          {/* Separador */}
           <div className="relative mb-6">
             <div className="absolute inset-0 flex items-center">
               <div className="w-full border-t border-gray-300"></div>
@@ -145,7 +104,6 @@ const handleSubmit = async (e: React.FormEvent) => {
             </div>
           </div>
 
-          {/* Botones Sociales */}
           <div className="grid grid-cols-2 gap-3">
             <button
               type="button"
@@ -172,7 +130,7 @@ const handleSubmit = async (e: React.FormEvent) => {
         </div>
       </div>
 
-      {/* Sección derecha (Imagen) */}
+      {/* Imagen derecha */}
       <div className="hidden lg:block lg:w-1/2 relative bg-gray-100">
         <Image
           src="/images/login.png"
