@@ -26,36 +26,56 @@ export default function RegisterPage() {
 
   const router = useRouter();
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+  setError('');
 
-    if (!email.includes('@')) {
-      setError('Correo electrónico no válido');
+  if (!email.includes('@')) {
+    setError('Correo electrónico no válido');
+    return;
+  }
+
+  if (password.length < 6) {
+    setError('La contraseña debe tener al menos 6 caracteres');
+    return;
+  }
+
+  if (password !== confirmPassword) {
+    setError('Las contraseñas no coinciden');
+    return;
+  }
+
+  try {
+    const res = await fetch('/api/auth/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        email,
+        password,
+        nombre: `${nombre} ${apellidos}`,
+        tipo: rol,
+        especialidad: rol === 'trabajador' ? 'general' : undefined // puedes hacerlo dinámico luego
+      })
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      setError(data.error || 'Error al registrarse');
       return;
     }
 
-    if (password.length < 6) {
-      setError('La contraseña debe tener al menos 6 caracteres');
-      return;
-    }
-
-    if (password !== confirmPassword) {
-      setError('Las contraseñas no coinciden');
-      return;
-    }
-
-    console.log({ nombre, apellidos, email, password, rol });
-
-    // Guardar rol por si deseas accederlo después
-    localStorage.setItem('rol', rol);
-
-    // Redirigir según el rol
+    // Registro exitoso, redirigir
     if (rol === 'cliente') {
       router.push('/cliente');
-    } else if (rol === 'trabajador') {
+    } else {
       router.push('/trabajador');
     }
-  };
+  } catch (err) {
+    setError('Error de conexión con el servidor');
+  }
+};
+
 
   return (
     <div className="flex h-screen overflow-hidden">

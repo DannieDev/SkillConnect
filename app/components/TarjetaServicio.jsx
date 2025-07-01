@@ -16,7 +16,7 @@ export default function TarjetaServicio({ servicio }) {
       <img src={servicio.img} alt={servicio.titulo} className="w-full h-40 object-cover rounded mb-2" />
       <h3 className="text-sm text-gray-500">{servicio.categoria}</h3>
       <h2 className="text-lg font-semibold">{servicio.titulo}</h2>
-      <p className="text-base text-gray-600">${servicio.precio}</p>
+      <p className="text-base text-gray-600">{servicio.precio}</p>
     </div>
   );
 }

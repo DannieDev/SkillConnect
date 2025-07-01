@@ -14,24 +14,47 @@ export default function LoginPage() {
   const [error, setError] = useState('');
   const router = useRouter();
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+  setError('');
 
-    // Validación básica
-    if (!email.includes('@')) {
-      setError('Email no válido');
+  if (!email.includes('@')) {
+    setError('Email no válido');
+    return;
+  }
+
+  if (password.length < 6) {
+    setError('La contraseña debe tener al menos 6 caracteres');
+    return;
+  }
+
+  try {
+    const res = await fetch('/api/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        email,
+        password,
+        tipo: 'cliente' // o 'trabajador' según sea el caso
+      }),
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      setError(data.error || 'Error al iniciar sesión');
       return;
     }
 
-    if (password.length < 6) {
-      setError('La contraseña debe tener al menos 6 caracteres');
-      return;
-    }
+    // Guardar token en localStorage (opcional)
+    localStorage.setItem('token', data.token);
 
-    // Simular autenticación (reemplazar con tu lógica real)
-    console.log('Credenciales:', { email, password });
-router.push('/cliente/home');
-  };
+    // Redirigir según el tipo
+    router.push('/cliente/home'); // o '/trabajador' según el tipo
+  } catch (err) {
+    setError('Error de conexión con el servidor');
+  }
+};
 
   return (
     <div className="flex min-h-screen">
