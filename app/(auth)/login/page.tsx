@@ -3,7 +3,12 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { AtSymbolIcon, KeyIcon, ExclamationCircleIcon, ArrowRightIcon } from '@heroicons/react/24/outline';
+import {
+  AtSymbolIcon,
+  KeyIcon,
+  ExclamationCircleIcon,
+  ArrowRightIcon
+} from '@heroicons/react/24/outline';
 import Image from 'next/image';
 import { FcGoogle } from 'react-icons/fc';
 import { FaGithub } from 'react-icons/fa';
@@ -17,7 +22,6 @@ export default function LoginPage() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Validación básica
     if (!email.includes('@')) {
       setError('Email no válido');
       return;
@@ -28,16 +32,21 @@ export default function LoginPage() {
       return;
     }
 
-    // Simular autenticación (reemplazar con tu lógica real)
-    console.log('Credenciales:', { email, password });
-router.push('/cliente/home');
+    // Simular autenticación
+    const rol = localStorage.getItem('rol');
+
+    if (rol === 'trabajador') {
+      router.push('/trabajador');
+    } else {
+      router.push('/cliente/home'); // cliente o valor por defecto
+    }
   };
 
   return (
     <div className="flex min-h-screen">
-      {/* Sección izquierda (Formulario) */}
+      {/* Sección izquierda */}
       <div className="w-full lg:w-1/2 flex items-center justify-center p-8 bg-white">
-<div className="w-full max-w-sm scale-[0.82]">
+        <div className="w-full max-w-sm scale-[0.82]">
           <h1 className="text-3xl font-bold text-blue-900 mb-6">Iniciar Sesión</h1>
 
           {error && (
@@ -58,10 +67,7 @@ router.push('/cliente/home');
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full pl-10 pr-3 py-2 border border-gray-600 rounded-lg 
-                    placeholder-gray-400 
-                    text-gray-900 bg-white
-                    disabled:text-gray-400 disabled:bg-gray-50"
+                  className="w-full pl-10 pr-3 py-2 border border-gray-600 rounded-lg placeholder-gray-400 text-gray-900 bg-white"
                   placeholder="name@email.com"
                   required
                 />
@@ -78,10 +84,7 @@ router.push('/cliente/home');
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full pl-10 pr-3 py-2 border border-gray-600 rounded-lg 
-                    placeholder-gray-400 
-                    text-gray-900 bg-white
-                    disabled:text-gray-400 disabled:bg-gray-50"
+                  className="w-full pl-10 pr-3 py-2 border border-gray-600 rounded-lg placeholder-gray-400 text-gray-900 bg-white"
                   placeholder="••••••••"
                   required
                 />
@@ -112,7 +115,6 @@ router.push('/cliente/home');
             </button>
           </form>
 
-          {/* Separador */}
           <div className="relative mb-6">
             <div className="absolute inset-0 flex items-center">
               <div className="w-full border-t border-gray-300"></div>
@@ -122,7 +124,6 @@ router.push('/cliente/home');
             </div>
           </div>
 
-          {/* Botones Sociales */}
           <div className="grid grid-cols-2 gap-3">
             <button
               type="button"
@@ -149,7 +150,7 @@ router.push('/cliente/home');
         </div>
       </div>
 
-      {/* Sección derecha (Imagen) */}
+      {/* Imagen derecha */}
       <div className="hidden lg:block lg:w-1/2 relative bg-gray-100">
         <Image
           src="/images/login.png"

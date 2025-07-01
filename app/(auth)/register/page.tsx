@@ -44,17 +44,11 @@ export default function RegisterPage() {
       return;
     }
 
-    console.log({ nombre, apellidos, email, password, rol });
-
-    // Guardar rol por si deseas accederlo después
+    // Simulación de registro sin backend
     localStorage.setItem('rol', rol);
 
-    // Redirigir según el rol
-    if (rol === 'cliente') {
-      router.push('/cliente');
-    } else if (rol === 'trabajador') {
-      router.push('/trabajador');
-    }
+    alert('Cuenta creada exitosamente. Por favor inicia sesión.');
+    router.push('/login');
   };
 
   return (
@@ -72,7 +66,6 @@ export default function RegisterPage() {
           )}
 
           <form onSubmit={handleSubmit} className="space-y-5">
-            {/* Nombre */}
             <div className="relative">
               <UserIcon className="absolute left-3 top-3 h-5 w-5 text-gray-500" />
               <input
@@ -85,7 +78,6 @@ export default function RegisterPage() {
               />
             </div>
 
-            {/* Apellidos */}
             <div className="relative">
               <UserIcon className="absolute left-3 top-3 h-5 w-5 text-gray-500" />
               <input
@@ -98,7 +90,6 @@ export default function RegisterPage() {
               />
             </div>
 
-            {/* Email */}
             <div className="relative">
               <AtSymbolIcon className="absolute left-3 top-3 h-5 w-5 text-gray-500" />
               <input
@@ -111,7 +102,6 @@ export default function RegisterPage() {
               />
             </div>
 
-            {/* Contraseña */}
             <div className="relative">
               <KeyIcon className="absolute left-3 top-3 h-5 w-5 text-gray-500" />
               <input
@@ -124,7 +114,6 @@ export default function RegisterPage() {
               />
             </div>
 
-            {/* Confirmar Contraseña */}
             <div className="relative">
               <KeyIcon className="absolute left-3 top-3 h-5 w-5 text-gray-500" />
               <input
@@ -137,7 +126,6 @@ export default function RegisterPage() {
               />
             </div>
 
-            {/* Rol */}
             <div>
               <label className="block text-sm text-gray-700 mb-1">Continuar como</label>
               <div className="flex gap-3">
@@ -176,7 +164,6 @@ export default function RegisterPage() {
             </button>
           </form>
 
-          {/* Separador */}
           <div className="relative my-6">
             <div className="absolute inset-0 flex items-center">
               <div className="w-full border-t border-gray-300"></div>
@@ -186,7 +173,6 @@ export default function RegisterPage() {
             </div>
           </div>
 
-          {/* Social Login */}
           <div className="grid grid-cols-2 gap-3">
             <button className="w-full flex items-center justify-center gap-2 bg-white border border-gray-300 text-gray-700 py-2 px-4 rounded-lg hover:bg-gray-50 transition-colors">
               <FcGoogle className="h-5 w-5" />
@@ -207,7 +193,6 @@ export default function RegisterPage() {
         </div>
       </div>
 
-      {/* Imagen derecha */}
       <div className="hidden lg:flex lg:w-1/2 h-screen">
         <Image
           src="/images/register.png"
