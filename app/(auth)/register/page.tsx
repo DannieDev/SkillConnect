@@ -26,9 +26,11 @@ export default function RegisterPage() {
 
   const router = useRouter();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError('');
 
+    // Validaciones básicas
     if (!email.includes('@')) {
       setError('Correo electrónico no válido');
       return;
@@ -44,16 +46,37 @@ export default function RegisterPage() {
       return;
     }
 
-    // Simulación de registro sin backend
-    localStorage.setItem('rol', rol);
+    try {
+      const res = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          nombre,
+          apellidos,
+          email,
+          password,
+          tipo: rol,
+          especialidad: rol === 'trabajador' ? 'general' : undefined
+        })
+      });
 
-    alert('Cuenta creada exitosamente. Por favor inicia sesión.');
-    router.push('/login');
+      const data = await res.json();
+
+      if (!res.ok) {
+        setError(data.error || 'Error al crear cuenta');
+        return;
+      }
+
+      alert('✅ Cuenta creada exitosamente. Por favor inicia sesión.');
+      router.push('/login');
+    } catch (err) {
+      console.error('❌ Error en el registro:', err);
+      setError('Hubo un problema con el servidor');
+    }
   };
 
   return (
     <div className="flex h-screen overflow-hidden">
-      {/* Sección izquierda */}
       <div className="w-full lg:w-1/2 flex justify-center items-center p-9 bg-white">
         <div className="w-full max-w-sm scale-[0.82]">
           <h1 className="text-2xl font-bold text-blue-900 mb-6">Crear Cuenta</h1>
@@ -66,6 +89,7 @@ export default function RegisterPage() {
           )}
 
           <form onSubmit={handleSubmit} className="space-y-5">
+            {/* NOMBRE */}
             <div className="relative">
               <UserIcon className="absolute left-3 top-3 h-5 w-5 text-gray-500" />
               <input
@@ -78,6 +102,7 @@ export default function RegisterPage() {
               />
             </div>
 
+            {/* APELLIDOS */}
             <div className="relative">
               <UserIcon className="absolute left-3 top-3 h-5 w-5 text-gray-500" />
               <input
@@ -90,6 +115,7 @@ export default function RegisterPage() {
               />
             </div>
 
+            {/* EMAIL */}
             <div className="relative">
               <AtSymbolIcon className="absolute left-3 top-3 h-5 w-5 text-gray-500" />
               <input
@@ -102,6 +128,7 @@ export default function RegisterPage() {
               />
             </div>
 
+            {/* PASSWORD */}
             <div className="relative">
               <KeyIcon className="absolute left-3 top-3 h-5 w-5 text-gray-500" />
               <input
@@ -114,6 +141,7 @@ export default function RegisterPage() {
               />
             </div>
 
+            {/* CONFIRMAR PASSWORD */}
             <div className="relative">
               <KeyIcon className="absolute left-3 top-3 h-5 w-5 text-gray-500" />
               <input
@@ -126,6 +154,7 @@ export default function RegisterPage() {
               />
             </div>
 
+            {/* TIPO DE USUARIO */}
             <div>
               <label className="block text-sm text-gray-700 mb-1">Continuar como</label>
               <div className="flex gap-3">
@@ -156,6 +185,7 @@ export default function RegisterPage() {
               </div>
             </div>
 
+            {/* BOTÓN REGISTRO */}
             <button
               type="submit"
               className="w-full bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 transition-colors"
@@ -164,6 +194,7 @@ export default function RegisterPage() {
             </button>
           </form>
 
+          {/* OPCIONES DE GOOGLE/GITHUB */}
           <div className="relative my-6">
             <div className="absolute inset-0 flex items-center">
               <div className="w-full border-t border-gray-300"></div>
@@ -193,6 +224,7 @@ export default function RegisterPage() {
         </div>
       </div>
 
+      {/* Imagen derecha */}
       <div className="hidden lg:flex lg:w-1/2 h-screen">
         <Image
           src="/images/register.png"

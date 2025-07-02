@@ -6,8 +6,7 @@ import { useRouter } from 'next/navigation';
 import {
   AtSymbolIcon,
   KeyIcon,
-  ExclamationCircleIcon,
-  ArrowRightIcon
+  ExclamationCircleIcon
 } from '@heroicons/react/24/outline';
 import Image from 'next/image';
 import { FcGoogle } from 'react-icons/fc';
@@ -16,11 +15,13 @@ import { FaGithub } from 'react-icons/fa';
 export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [tipo, setTipo] = useState<'trabajador' | 'cliente'>('trabajador');
   const [error, setError] = useState('');
   const router = useRouter();
 
- const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError('');
 
     if (!email.includes('@')) {
       setError('Email no válido');
@@ -32,19 +33,32 @@ export default function LoginPage() {
       return;
     }
 
-    // Simular autenticación
-    const rol = localStorage.getItem('rol');
+    try {
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password, tipo })
+      });
 
-    if (rol === 'trabajador') {
-      router.push('/trabajador');
-    } else {
-      router.push('/cliente/home'); // cliente o valor por defecto
+      const data = await res.json();
+
+      if (!res.ok) {
+        setError(data.message || data.error || 'Credenciales incorrectas');
+        return;
+      }
+
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('rol', data.usuario.tipo);
+
+      router.push(data.usuario.tipo === 'trabajador' ? '/trabajador' : '/cliente/home');
+    } catch (err) {
+      console.error(err);
+      setError('Hubo un error con el servidor');
     }
   };
 
   return (
-    <div className="flex min-h-screen">
-      {/* Sección izquierda */}
+    <div className="h-screen flex overflow-hidden">
       <div className="w-full lg:w-1/2 flex items-center justify-center p-8 bg-white">
         <div className="w-full max-w-sm scale-[0.82]">
           <h1 className="text-3xl font-bold text-blue-900 mb-6">Iniciar Sesión</h1>
@@ -91,6 +105,23 @@ export default function LoginPage() {
               </div>
             </div>
 
+            <div className="flex justify-between mb-4">
+              <button
+                type="button"
+                className={`px-4 py-2 rounded-md w-full mr-2 ${tipo === 'trabajador' ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}
+                onClick={() => setTipo('trabajador')}
+              >
+                Trabajador
+              </button>
+              <button
+                type="button"
+                className={`px-4 py-2 rounded-md w-full ml-2 ${tipo === 'cliente' ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}
+                onClick={() => setTipo('cliente')}
+              >
+                Cliente
+              </button>
+            </div>
+
             <div className="flex items-center justify-between">
               <div className="flex items-center">
                 <input
@@ -109,13 +140,13 @@ export default function LoginPage() {
 
             <button
               type="submit"
-              className="w-full bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 transition-colors focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 mb-6"
+              className="w-full bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 transition-colors"
             >
               Iniciar sesión
             </button>
           </form>
 
-          <div className="relative mb-6">
+          <div className="relative mb-6 mt-8">
             <div className="absolute inset-0 flex items-center">
               <div className="w-full border-t border-gray-300"></div>
             </div>
@@ -150,8 +181,7 @@ export default function LoginPage() {
         </div>
       </div>
 
-      {/* Imagen derecha */}
-      <div className="hidden lg:block lg:w-1/2 relative bg-gray-100">
+      <div className="hidden lg:block lg:w-1/2 relative">
         <Image
           src="/images/login.png"
           alt="Ilustración de trabajo"
