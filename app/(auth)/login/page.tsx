@@ -50,7 +50,8 @@ export default function LoginPage() {
       localStorage.setItem('token', data.token);
       localStorage.setItem('rol', data.usuario.tipo);
 
-      router.push(data.usuario.tipo === 'trabajador' ? '/trabajador' : '/cliente/home');
+      router.push(data.usuario.tipo === 'trabajador' ? '/dashboard/trabajador' : '/cliente/home');
+
     } catch (err) {
       console.error(err);
       setError('Hubo un error con el servidor');

@@ -115,22 +115,23 @@ export default function ClienteHome() {
           />
         </div>
 
-        {/* Grid de trabajadores */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-          {serviciosFiltrados.map((s) => (
-            <Link key={s.id} href={`/cliente/detalle/${s.id}`}>
-              <div className="bg-white rounded-lg shadow p-4 hover:shadow-md transition cursor-pointer">
-                <img src={s.img} alt={s.titulo} className="w-full h-48 object-contain rounded mb-3" />
-                <h3 className="text-sm text-gray-500">{s.categoria}</h3>
-                <h2 className="text-lg font-semibold">{s.titulo}</h2>
-                <p className="text-base text-gray-600">${s.precio}</p>
-                <p className="text-xs text-gray-400">Disponible: {s.disponibilidad}</p>
-                <p className="text-xs text-gray-400">Fecha: {s.fecha}</p>
-                <span className="text-blue-500 hover:underline mt-1 inline-block">Ver más</span>
-              </div>
-            </Link>
-          ))}
-        </div>
+{/* Grid de trabajadores */}
+<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+  {serviciosFiltrados.map((s) => (
+    <Link key={s.id} href={`/cliente/detalle/${s.id}`}>
+      <div className="bg-white rounded-lg shadow p-4 hover:shadow-md transition cursor-pointer">
+        <img src={s.img} alt={s.titulo} className="w-full h-48 object-cover rounded mb-3" />
+        <p className="text-sm text-gray-500 mb-1">{s.categoria}</p>
+        <h2 className="text-[17px] font-semibold text-gray-900 mb-1">{s.titulo}</h2>
+        <p className="text-base text-gray-700 font-medium mb-1">${s.precio}</p>
+        <p className="text-xs text-gray-400">Disponible: {s.disponibilidad}</p>
+        <p className="text-xs text-gray-400 mb-2">Fecha: {s.fecha}</p>
+        <span className="text-blue-500 text-sm font-medium hover:underline">Ver más</span>
+      </div>
+    </Link>
+  ))}
+</div>
+
       </div>
     </div>
   );
