@@ -4,10 +4,15 @@ import Trabajador from '@/models/trabajador';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server';
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   try {
     const { email, password, tipo } = await req.json();
+
+    if (!email || !password || !tipo) {
+      return NextResponse.json({ error: 'Faltan campos obligatorios' }, { status: 400 });
+    }
 
     await connectDB();
 
@@ -25,24 +30,35 @@ export async function POST(req: Request) {
 
     const token = jwt.sign(
       {
-        id: usuario._id,
+        id: usuario._id.toString(),
         email: usuario.email,
+        nombre: usuario.nombre,
         tipo: tipo
       },
       process.env.JWT_SECRET!,
       { expiresIn: '2h' }
     );
 
-    return NextResponse.json({
+    // 🔧 Respuesta completa con el token y los datos del usuario
+    const response = NextResponse.json({
       message: 'Login exitoso',
       token,
       usuario: {
-        id: usuario._id,
+        tipo,
         nombre: usuario.nombre,
         email: usuario.email,
-        tipo
+        id: usuario._id.toString()
       }
     });
+
+    // ✅ Establecer cookie segura y accesible solo por el servidor
+    response.headers.set(
+      'Set-Cookie',
+      `token=${token}; Path=/; HttpOnly; SameSite=Lax; Max-Age=7200`
+    );
+
+    return response;
+
   } catch (error) {
     console.error('❌ Error en el login:', error);
     return NextResponse.json({ error: 'Error al iniciar sesión' }, { status: 500 });

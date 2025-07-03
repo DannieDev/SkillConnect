@@ -1,7 +1,9 @@
 'use client';
 
 import Image from 'next/image';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import axios from 'axios';
 import {
   FaStar, FaSignOutAlt, FaEdit, FaHistory,
   FaTasks, FaBriefcase, FaCheckCircle
@@ -9,6 +11,22 @@ import {
 
 export default function DashboardTrabajador() {
   const router = useRouter();
+  const [nombre, setNombre] = useState('');
+  const [email, setEmail] = useState('');
+
+  useEffect(() => {
+    const obtenerDatosUsuario = async () => {
+      try {
+        const res = await axios.get('/api/auth/userinfo');
+        setNombre(res.data.nombre);
+        setEmail(res.data.email);
+      } catch (error) {
+        console.error('Error al obtener datos del trabajador:', error);
+        router.push('/login');
+      }
+    };
+    obtenerDatosUsuario();
+  }, []);
 
   return (
     <main className="min-h-screen bg-gray-100 p-4 md:p-6">
@@ -24,8 +42,8 @@ export default function DashboardTrabajador() {
               className="rounded-full"
             />
             <div>
-              <h2 className="text-2xl font-bold">Brayan Omar</h2>
-              <p className="text-sm text-gray-600">Electricista Certificado</p>
+              <h2 className="text-2xl font-bold">{nombre || 'Nombre del trabajador'}</h2>
+              <p className="text-sm text-gray-600">{email || 'correo@ejemplo.com'}</p>
               <div className="flex items-center text-yellow-500 text-sm">
                 <FaStar />
                 <span className="ml-1">4.9 (45 reseñas)</span>
@@ -43,7 +61,6 @@ export default function DashboardTrabajador() {
 
         {/* Grid de información */}
         <div className="grid md:grid-cols-3 gap-4">
-          {/* Contrataciones activas */}
           <div className="bg-blue-50 border p-4 rounded-lg">
             <h3 className="font-bold text-lg mb-2 flex items-center text-blue-600">
               <FaCheckCircle className="mr-2" /> Contrataciones activas
@@ -54,7 +71,6 @@ export default function DashboardTrabajador() {
             </ul>
           </div>
 
-          {/* Historial */}
           <div className="bg-green-50 border p-4 rounded-lg">
             <h3 className="font-bold text-lg mb-2 flex items-center text-green-600">
               <FaHistory className="mr-2" /> Historial
@@ -65,7 +81,6 @@ export default function DashboardTrabajador() {
             </ul>
           </div>
 
-          {/* Servicios ofrecidos */}
           <div className="bg-yellow-50 border p-4 rounded-lg">
             <h3 className="font-bold text-lg mb-2 flex items-center text-yellow-600">
               <FaBriefcase className="mr-2" /> Servicios ofrecidos
@@ -78,7 +93,6 @@ export default function DashboardTrabajador() {
           </div>
         </div>
 
-        {/* Disponibilidad */}
         <div className="bg-gray-50 p-4 rounded-lg border">
           <h3 className="font-bold text-lg mb-2">Disponibilidad</h3>
           <p>Lunes a Viernes - 9:00 AM a 6:00 PM</p>
@@ -110,7 +124,6 @@ export default function DashboardTrabajador() {
           </button>
           <button
             onClick={() => {
-              localStorage.removeItem('rol');
               router.push('/login');
             }}
             className="flex items-center justify-center gap-2 p-4 bg-white border rounded hover:bg-red-100 text-red-600"

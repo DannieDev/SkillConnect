@@ -1,21 +1,22 @@
-import mongoose, { Schema, Document } from 'mongoose';
+import mongoose, { Schema, model, models } from 'mongoose';
 
-export interface ICliente extends Document {
-  nombre: string;
-  email: string;
-  password: string;
-  fechaRegistro: Date;
-  telefono?: string;
-}
-
-const clienteSchema = new Schema<ICliente>({
-  nombre: { type: String, required: true },
-  email: { type: String, required: true, unique: true },
-  password: { type: String, required: true },
-  fechaRegistro: { type: Date, default: Date.now },
-  telefono: { type: String },
+const clienteSchema = new Schema({
+  nombre: {
+    type: String,
+    required: true,
+  },
+  correo: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  password: {
+    type: String,
+    required: true,
+  }
+}, {
+  timestamps: true,
 });
 
-const Cliente = mongoose.models.Cliente || mongoose.model<ICliente>('Cliente', clienteSchema);
+const Cliente = models.Cliente || model('Cliente', clienteSchema);
 export default Cliente;
-
