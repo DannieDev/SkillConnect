@@ -1,7 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import axios from 'axios';
 import {
   FaHome,
   FaGlobe,
@@ -27,6 +28,19 @@ export default function ClienteHome() {
   const [categoriaFiltro, setCategoriaFiltro] = useState('');
   const [disponibilidadFiltro, setDisponibilidadFiltro] = useState('');
   const [fechaFiltro, setFechaFiltro] = useState('');
+  const [usuario, setUsuario] = useState<{ nombre: string, email: string } | null>(null);
+
+  useEffect(() => {
+    const obtenerUsuario = async () => {
+      try {
+        const res = await axios.get('/api/auth/userinfo');
+        setUsuario(res.data.usuario);
+      } catch (err) {
+        console.error('Error al obtener usuario', err);
+      }
+    };
+    obtenerUsuario();
+  }, []);
 
   const serviciosFiltrados = servicios.filter((s) => {
     const coincideBusqueda =
@@ -46,12 +60,12 @@ export default function ClienteHome() {
       <div className="w-64 bg-white shadow-lg flex flex-col items-center py-8">
         <img src="/images/logo.png" alt="Logo" className="w-44 mb-4 ml-4 -mt-2" />
         <nav className="flex flex-col gap-7 text-base text-gray-800 w-full px-6">
-         <a href="#" className="flex items-center gap-2 text-sm text-gray-700 hover:text-blue-600 transition"><FaHome className="text-xl" /> Inicio</a>
-        <a href="#" className="flex items-center gap-2 text-sm text-gray-700 hover:text-blue-600 transition"><FaGlobe className="text-xl" /> Explora</a>
-         <a href="#" className="flex items-center gap-2 text-sm text-gray-700 hover:text-blue-600 transition"><FaCog className="text-xl" /> Ajustes</a>
-        <a href="#" className="flex items-center gap-2 text-sm text-gray-700 hover:text-blue-600 transition"><FaEnvelope className="text-xl" /> Mensaje</a>
-         <a href="#" className="flex items-center gap-2 text-sm text-gray-700 hover:text-blue-600 transition"><FaBell className="text-xl" /> Notificaciones</a>
-       <a href="#" className="flex items-center gap-2 text-sm text-gray-700 hover:text-blue-600 transition"><FaSignOutAlt className="text-xl" /> Salir</a>
+          <a href="#" className="flex items-center gap-2 text-sm text-gray-700 hover:text-blue-600 transition"><FaHome className="text-xl" /> Inicio</a>
+          <a href="#" className="flex items-center gap-2 text-sm text-gray-700 hover:text-blue-600 transition"><FaGlobe className="text-xl" /> Explora</a>
+          <a href="#" className="flex items-center gap-2 text-sm text-gray-700 hover:text-blue-600 transition"><FaCog className="text-xl" /> Ajustes</a>
+          <a href="#" className="flex items-center gap-2 text-sm text-gray-700 hover:text-blue-600 transition"><FaEnvelope className="text-xl" /> Mensaje</a>
+          <a href="#" className="flex items-center gap-2 text-sm text-gray-700 hover:text-blue-600 transition"><FaBell className="text-xl" /> Notificaciones</a>
+          <a href="#" className="flex items-center gap-2 text-sm text-gray-700 hover:text-blue-600 transition"><FaSignOutAlt className="text-xl" /> Salir</a>
         </nav>
 
         {/* Perfil del usuario */}
@@ -59,8 +73,8 @@ export default function ClienteHome() {
           <div className="flex items-center gap-3 border-t pt-4">
             <img src="/images/user.jpg" alt="Usuario" className="w-10 h-10 rounded-full object-cover" />
             <div className="text-sm leading-tight">
-              <p className="font-semibold text-gray-900">John Doe</p>
-              <p className="text-gray-500 text-xs">john@xyztek.com</p>
+              <p className="font-semibold text-gray-900">{usuario?.nombre ?? 'Cargando...'}</p>
+              <p className="text-gray-500 text-xs">{usuario?.email ?? ''}</p>
             </div>
           </div>
         </div>
@@ -68,9 +82,10 @@ export default function ClienteHome() {
 
       {/* Main content */}
       <div className="flex-1 bg-gray-50 p-10 overflow-auto">
-       <h1 className="text-2xl font-semibold mb-1">Inicio</h1>
-       <p className="text-sm text-gray-500 mb-4">¡Bienvenido, John!</p>
-
+        <h1 className="text-2xl font-semibold mb-1">Inicio</h1>
+        <p className="text-sm text-gray-500 mb-4">
+          ¡Bienvenido{usuario?.nombre ? `, ${usuario.nombre}` : ''}!
+        </p>
 
         {/* Buscador y filtros */}
         <div className="flex flex-wrap gap-2 mb-6">
@@ -81,7 +96,6 @@ export default function ClienteHome() {
             value={busqueda}
             onChange={(e) => setBusqueda(e.target.value)}
           />
-
           <select
             value={categoriaFiltro}
             onChange={(e) => setCategoriaFiltro(e.target.value)}
@@ -95,7 +109,6 @@ export default function ClienteHome() {
             <option value="Mantenimiento">Mantenimiento</option>
             <option value="Jardinería">Jardinería</option>
           </select>
-
           <select
             value={disponibilidadFiltro}
             onChange={(e) => setDisponibilidadFiltro(e.target.value)}
@@ -106,7 +119,6 @@ export default function ClienteHome() {
             <option value="Tarde">Tarde</option>
             <option value="Noche">Noche</option>
           </select>
-
           <input
             type="date"
             value={fechaFiltro}
