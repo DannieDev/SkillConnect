@@ -1,4 +1,4 @@
-import { connectDB } from '@/lib/db';
+import connectDB from '@/lib/dbConnect';
 import { NextResponse } from 'next/server';
 import { ObjectId } from 'mongodb';
 

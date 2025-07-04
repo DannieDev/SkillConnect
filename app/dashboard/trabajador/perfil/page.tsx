@@ -2,6 +2,14 @@
 import React, { useState } from 'react';
 import { FaHeart, FaRegHeart } from 'react-icons/fa';
 import { FaCommentAlt } from 'react-icons/fa'; import { HiOutlineChatBubbleOvalLeft } from 'react-icons/hi2';
+import {
+  FaHome,
+  FaGlobe,
+  FaCog,
+  FaEnvelope,
+  FaBell,
+  FaSignOutAlt
+} from 'react-icons/fa';
 
 const publicaciones = [
   { id: 1, src: '/images/p1.jpg', likes: 218, comments: 18 },
@@ -26,6 +34,7 @@ const PerfilTrabajador: React.FC = () => {
       {/* Sidebar */}
       <aside className="w-64 bg-white border-r px-6 py-8 flex flex-col items-center">
         <img src="/images/logo_corto.png" alt="SkillConnect" className="h-10 mb-8" />
+        
 
         <img src="/images/foto_perfil.png" alt="Perfil" className="w-30 h-30 rounded-full border-4 border-white shadow-md mb-2 object-cover" />
         <h2 className="text-md font-semibold">Vanessa Ruíz</h2>
@@ -46,19 +55,13 @@ const PerfilTrabajador: React.FC = () => {
           </div>
         </div>
 
-        <nav className="space-y-6 text-gray-700 w-full">
-          <a href="#" className="flex items-center gap-3 hover:text-blue-600 text-sm">
-            <i className="fas fa-home"></i> Inicio
-          </a>
-          <a href="#" className="flex items-center gap-3 hover:text-blue-600 text-sm">
-            <i className="fas fa-globe"></i> Explora
-          </a>
-          <a href="#" className="flex items-center gap-3 hover:text-blue-600 text-sm">
-            <i className="fas fa-cog"></i> Ajustes
-          </a>
-          <a href="#" className="flex items-center gap-3 text-red-500 text-sm">
-            <i className="fas fa-sign-out-alt"></i> Salir
-          </a>
+        <nav className="flex flex-col gap-7 text-base text-gray-800 w-full px-6">
+          <a href="/dashboard/trabajador" className="flex items-center gap-2 text-sm text-gray-700 hover:text-blue-600 transition"><FaHome className="text-xl" /> Inicio</a>
+          <a href="#" className="flex items-center gap-2 text-sm text-gray-700 hover:text-blue-600 transition"><FaGlobe className="text-xl" /> Explora</a>
+          <a href="#" className="flex items-center gap-2 text-sm text-gray-700 hover:text-blue-600 transition"><FaCog className="text-xl" /> Ajustes</a>
+          <a href="#" className="flex items-center gap-2 text-sm text-gray-700 hover:text-blue-600 transition"><FaEnvelope className="text-xl" /> Mensajes</a>
+          <a href="#" className="flex items-center gap-2 text-sm text-gray-700 hover:text-blue-600 transition"><FaBell className="text-xl" /> Notificaciones</a>
+          <a href="#" className="flex items-center gap-2 text-sm text-gray-700 hover:text-blue-600 transition"><FaSignOutAlt className="text-xl" /> Salir</a>
         </nav>
       </aside>
 
@@ -77,15 +80,15 @@ const PerfilTrabajador: React.FC = () => {
             <i className="fas fa-bell text-gray-500 text-lg"></i>
             <i className="fas fa-paper-plane text-gray-500 text-lg"></i>
             <button className="bg-gradient-to-r from-purple-400 to-blue-400 text-white px-4 py-2 rounded-full text-sm">
-              + Añadir foto
+              + Nueva publicación
             </button>
+
           </div>
         </div>
 
         {/* Publicaciones */}
         <div className="flex justify-between items-center mb-4">
-          <h3 className="text-lg font-semibold">Publicaciones</h3>
-          <a href="#" className="text-blue-500 text-sm">Ver más</a>
+          <h3 className="text-lg font-semibold">Fotos</h3>
         </div>
 
         <div className="columns-1 sm:columns-2 md:columns-3 gap-4 space-y-4">
@@ -109,7 +112,7 @@ const PerfilTrabajador: React.FC = () => {
 
             return (
               <div key={pub.id} className="break-inside-avoid rounded-lg overflow-hidden shadow-sm bg-white mb-4">
-               <img src={pub.src} alt="Publicación" className="w-full object-cover rounded-t-md" />
+                <img src={pub.src} alt="Publicación" className="w-full object-cover rounded-t-md" />
 
                 <div className="flex justify-between items-center text-sm text-gray-600 px-3 py-2">
                   <button
