@@ -1,4 +1,8 @@
+<<<<<<< HEAD:app/api/clientes/routes.ts
 /*import  connectDB  from '@/lib/dbConnect';
+=======
+import connectDB from '@/lib/dbConnect';
+>>>>>>> 3fea25a0cb5f56165c2f9dd09433013099f7c5f3:app/api/cliente/routes.ts
 import { NextResponse } from 'next/server';
 import { ObjectId } from 'mongodb';
 

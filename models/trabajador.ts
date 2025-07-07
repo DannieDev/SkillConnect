@@ -1,26 +1,13 @@
 import mongoose, { Schema, model, models } from 'mongoose';
 
-const trabajadorSchema = new Schema({
-  nombre: {
-    type: String,
-    required: true,
-  },
-  email: {
-    type: String,
-    required: true,
-    unique: true,
-  },
-  password: {
-    type: String,
-    required: true,
-  },
-  servicios: [{
-    type: Schema.Types.ObjectId,
-    ref: 'Servicio'
-  }]
-}, {
-  timestamps: true,
-});
+const TrabajadorSchema = new Schema({
+  nombre: { type: String, required: true },
+  email: { type: String, unique: true, required: true },
+  password: { type: String, required: true },
+  profesion: { type: String },
+  descripcion: { type: String },
+  imagen: { type: String },
+  rol: { type: String, default: 'trabajador' },
+}, { timestamps: true });
 
-const Trabajador = models.Trabajador || model('Trabajador', trabajadorSchema);
-export default Trabajador;
+export default models.Trabajador || model('Trabajador', TrabajadorSchema);

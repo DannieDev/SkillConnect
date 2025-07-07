@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
-export function middleware(request: NextRequest) {
+export function middlewares(request: NextRequest) {
   const path = request.nextUrl.pathname;
   const isPublic = ['/login', '/register'].includes(path);
   const token = request.cookies.get('token')?.value;
