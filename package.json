@@ -8,7 +8,6 @@
     "start": "next start",
     "lint": "next lint",
     "typecheck": "tsc --noEmit"
-    
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",
@@ -42,12 +41,9 @@
     "@testing-library/react-hooks": "^8.0.1",
     "@testing-library/user-event": "^14.6.1",
     "@types/axios": "^0.14.4",
-<<<<<<< HEAD
     "@types/jest": "^30.0.0",
-=======
     "@types/express": "^5.0.3",
     "@types/formidable": "^3.4.5",
->>>>>>> 3fea25a0cb5f56165c2f9dd09433013099f7c5f3
     "@types/jsonwebtoken": "^9.0.10",
     "@types/mongoose": "^5.11.97",
     "@types/multer": "^2.0.0",

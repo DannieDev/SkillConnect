@@ -52,7 +52,7 @@ export default function LoginPage() {
 
       console.log(data.token);
 
-      router.push(data.usuario.tipo === 'trabajador' ? '/dashboard/trabajador' : '/cliente/home');
+      router.push(data.usuario.tipo === 'trabajador' ? '/dashboard/trabajador' : '/dashboard/cliente');
 
     } catch (err) {
       console.error(err);
