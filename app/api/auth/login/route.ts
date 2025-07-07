@@ -8,16 +8,21 @@ import type { NextRequest } from 'next/server';
 
 export async function POST(req: NextRequest) {
   try {
-    const { email, password, tipo } = await req.json();
+    const { email, password } = await req.json();
 
-    if (!email || !password || !tipo) {
+    if (!email || !password) {
       return NextResponse.json({ error: 'Faltan campos obligatorios' }, { status: 400 });
     }
 
     await connectDB();
 
-    const Modelo = tipo === 'trabajador' ? Trabajador : Cliente;
-    const usuario = await Modelo.findOne({ email });
+    let usuario = await Trabajador.findOne({ email: email.toLowerCase() });
+    let tipo = 'trabajador';
+
+    if (!usuario) {
+      usuario = await Cliente.findOne({ email: email.toLowerCase() });
+      tipo = 'cliente';
+    }
 
     if (!usuario) {
       return NextResponse.json({ error: 'Usuario no encontrado' }, { status: 404 });
@@ -33,13 +38,12 @@ export async function POST(req: NextRequest) {
         id: usuario._id.toString(),
         email: usuario.email,
         nombre: usuario.nombre,
-        tipo: tipo
+        tipo
       },
       process.env.JWT_SECRET!,
       { expiresIn: '2h' }
     );
 
-    // 🔧 Respuesta completa con el token y los datos del usuario
     const response = NextResponse.json({
       message: 'Login exitoso',
       token,
@@ -51,7 +55,6 @@ export async function POST(req: NextRequest) {
       }
     });
 
-    // ✅ Establecer cookie segura y accesible solo por el servidor
     response.headers.set(
       'Set-Cookie',
       `token=${token}; Path=/; HttpOnly; SameSite=Lax; Max-Age=7200`

@@ -105,24 +105,6 @@ export default function LoginPage() {
                 />
               </div>
             </div>
-
-            <div className="flex justify-between mb-4">
-              <button
-                type="button"
-                className={`px-4 py-2 rounded-md w-full mr-2 ${tipo === 'trabajador' ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}
-                onClick={() => setTipo('trabajador')}
-              >
-                Trabajador
-              </button>
-              <button
-                type="button"
-                className={`px-4 py-2 rounded-md w-full ml-2 ${tipo === 'cliente' ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}
-                onClick={() => setTipo('cliente')}
-              >
-                Cliente
-              </button>
-            </div>
-
             <div className="flex items-center justify-between">
               <div className="flex items-center">
                 <input

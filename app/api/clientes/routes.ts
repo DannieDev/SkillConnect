@@ -1,4 +1,4 @@
-import { connectDB } from '@/lib/db';
+/*import  connectDB  from '@/lib/dbConnect';
 import { NextResponse } from 'next/server';
 import { ObjectId } from 'mongodb';
 
@@ -48,4 +48,4 @@ export async function DELETE(request: Request) {
   );
   
   return NextResponse.json(result);
-}
+}*/
