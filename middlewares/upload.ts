@@ -13,9 +13,9 @@ export const config = {
 };
 
 cloudinary.config({
-  cloud_name: 'deq6ntb7q',
-  api_key: '593673218855184',
-  api_secret: process.env.CLOUDINARY_SECRET,
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME!,
+  api_key: process.env.CLOUDINARY_API_KEY!,
+  api_secret: process.env.CLOUDINARY_API_SECRET!,
 });
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {

@@ -1,117 +1,118 @@
 'use client';
 
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import axios from 'axios';
 
 export default function CrearPublicacionPage() {
-  const [titulo, setTitulo] = useState('');
+  const router = useRouter();
   const [descripcion, setDescripcion] = useState('');
   const [categoria, setCategoria] = useState('limpieza');
   const [imagen, setImagen] = useState<File | null>(null);
-  const [preview, setPreview] = useState('');
+  const [preview, setPreview] = useState<string | null>(null);
+  const [mensaje, setMensaje] = useState('');
   const [error, setError] = useState('');
-  const router = useRouter();
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       setImagen(file);
-      setPreview(URL.createObjectURL(file));
+      const reader = new FileReader();
+      reader.onloadend = () => setPreview(reader.result as string);
+      reader.readAsDataURL(file);
     }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setMensaje('');
     setError('');
 
-    if (!titulo || !descripcion || !imagen) {
+    if (!descripcion || !imagen) {
       setError('Todos los campos son obligatorios');
       return;
     }
 
+    const formData = new FormData();
+    formData.append('titulo', 'Publicación rápida');
+    formData.append('descripcion', descripcion);
+    formData.append('categoria', categoria);
+    formData.append('imagen', imagen);
+
     try {
-      const formData = new FormData();
-      formData.append('titulo', titulo);
-      formData.append('descripcion', descripcion);
-      formData.append('categoria', categoria);
-      formData.append('imagen', imagen);
-
       const token = localStorage.getItem('token');
-
-      const res = await fetch('/api/publicaciones', {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${token || ''}`,
-        },
-        body: formData,
+      await axios.post('/api/publicaciones', formData, {
+        headers: { Authorization: `Bearer ${token}` },
       });
 
-      const data = await res.json();
-
-      if (!res.ok) {
-        setError(data.error || 'Error al crear publicación');
-        return;
-      }
-
-      router.push('/dashboard/trabajador');
-    } catch (err) {
-      console.error(err);
-      setError('Error inesperado');
+      setMensaje('✅ Publicación creada con éxito');
+      setTimeout(() => router.push('/dashboard/trabajador'), 1500);
+    } catch (error) {
+      console.error('Error al crear publicación:', error);
+      setError('Error al crear la publicación');
     }
   };
 
   return (
-    <div className="max-w-xl mx-auto mt-10">
-      <h1 className="text-2xl font-bold mb-6">Crear nueva publicación</h1>
+    <main className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
+      <div className="bg-white shadow-lg rounded-lg p-8 w-full max-w-xl">
+        <h1 className="text-2xl font-bold text-center mb-6">Crear nueva publicación</h1>
 
-      {error && <p className="text-red-600 mb-4">{error}</p>}
+        {error && <p className="text-red-600 text-center mb-4">{error}</p>}
+        {mensaje && <p className="text-green-600 text-center mb-4">{mensaje}</p>}
 
-      <form onSubmit={handleSubmit} className="space-y-6">
-        <input
-          type="text"
-          value={titulo}
-          onChange={(e) => setTitulo(e.target.value)}
-          placeholder="Título"
-          className="w-full p-2 border rounded"
-        />
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <textarea
+            rows={4}
+            placeholder="Descripción del servicio"
+            className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+            value={descripcion}
+            onChange={(e) => setDescripcion(e.target.value)}
+          />
 
-        <textarea
-          value={descripcion}
-          onChange={(e) => setDescripcion(e.target.value)}
-          placeholder="Descripción del servicio"
-          rows={4}
-          className="w-full p-2 border rounded"
-        />
+          <select
+            value={categoria}
+            onChange={(e) => setCategoria(e.target.value)}
+            className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+          >
+            <option value="limpieza">Limpieza</option>
+            <option value="electricidad">Electricidad</option>
+            <option value="jardinería">Jardinería</option>
+            <option value="plomería">Plomería</option>
+          </select>
 
-        <select
-          value={categoria}
-          onChange={(e) => setCategoria(e.target.value)}
-          className="w-full p-2 border rounded"
-        >
-          <option value="limpieza">Limpieza</option>
-          <option value="electricidad">Electricidad</option>
-          <option value="plomería">Plomería</option>
-          <option value="jardinería">Jardinería</option>
-        </select>
+          <div className="mb-6">
+            <label className="block text-sm font-medium text-gray-700 mb-2">Imagen</label>
+            <input
+              type="file"
+              id="imagenInput"
+              accept="image/*"
+              onChange={handleImageChange}
+              className="hidden"
+            />
+            <label
+              htmlFor="imagenInput"
+              className="inline-block bg-gradient-to-r from-purple-500 to-blue-500 text-white px-4 py-2 rounded-full text-sm shadow hover:opacity-90 cursor-pointer transition"
+            >
+              Elegir imagen
+            </label>
+            {preview && (
+              <img
+                src={preview}
+                alt="Vista previa"
+                className="w-full max-h-64 object-cover mt-4 rounded-md"
+              />
+            )}
+          </div>
 
-        <input
-          type="file"
-          accept="image/*"
-          onChange={handleImageChange}
-          className="w-full"
-        />
-
-        {preview && (
-          <img src={preview} alt="Vista previa" className="w-32 h-32 object-cover mt-2 rounded" />
-        )}
-
-        <button
-          type="submit"
-          className="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700"
-        >
-          Publicar
-        </button>
-      </form>
-    </div>
+          <button
+            type="submit"
+            className="w-full bg-gradient-to-r from-purple-500 to-blue-500 text-white py-3 rounded-md text-lg font-semibold hover:from-purple-600 hover:to-blue-600 transition"
+          >
+            Publicar
+          </button>
+        </form>
+      </div>
+    </main>
   );
 }

@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation';
 
 interface Publicacion {
   _id: string;
-  titulo: string;
   descripcion: string;
   imagen: string;
   categoria: string;
@@ -16,6 +15,7 @@ export default function PublicacionesPage() {
   const [publicaciones, setPublicaciones] = useState<Publicacion[]>([]);
   const [error, setError] = useState('');
   const router = useRouter();
+  const [mensaje, setMensaje] = useState('');
 
   useEffect(() => {
     fetchPublicaciones();
@@ -55,12 +55,14 @@ export default function PublicacionesPage() {
           Authorization: `Bearer ${token}`,
         },
       });
-
       if (!res.ok) {
         const data = await res.json();
         alert(data.error || 'Error al eliminar publicación');
         return;
       }
+
+      setMensaje('✅ Publicación eliminada');
+      setTimeout(() => setMensaje(''), 3000);
 
       // refrescar lista
       fetchPublicaciones();
@@ -73,7 +75,8 @@ export default function PublicacionesPage() {
   return (
     <div className="max-w-4xl mx-auto p-4">
       <h1 className="text-2xl font-bold mb-6">Mis Publicaciones</h1>
-
+      
+      {mensaje && <p className="text-green-600 mb-4">{mensaje}</p>}
       {error && <p className="text-red-600 mb-4">{error}</p>}
 
       {publicaciones.length === 0 ? (
@@ -84,10 +87,8 @@ export default function PublicacionesPage() {
             <div key={publi._id} className="bg-white rounded-lg shadow p-4 border border-gray-200">
               <img
                 src={publi.imagen}
-                alt={publi.titulo}
                 className="w-full h-40 object-cover rounded mb-3"
               />
-              <h2 className="text-xl font-semibold">{publi.titulo}</h2>
               <p className="text-sm text-gray-600 mb-2">{publi.categoria}</p>
               <p className="text-gray-800">{publi.descripcion}</p>
               <p className="text-xs text-gray-400 mt-2">

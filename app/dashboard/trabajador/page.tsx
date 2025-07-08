@@ -15,9 +15,10 @@ import {
   FaBookmark,
   FaRegBookmark,
   FaRegComment,
+  FaImages,
 } from 'react-icons/fa';
 
-function MenuOpciones({ id }: { id: string }) {
+function MenuOpciones({ id, onEliminar }: { id: string; onEliminar: () => void }) {
   const [open, setOpen] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
   const router = useRouter();
@@ -31,7 +32,7 @@ function MenuOpciones({ id }: { id: string }) {
     if (res.ok) {
       setConfirmDelete(false);
       setOpen(false);
-      router.refresh();
+      onEliminar(); // ✅ actualiza desde el padre
     } else {
       alert('Error al eliminar publicación');
     }
@@ -105,6 +106,8 @@ export default function TrabajadorHome() {
   const [likes, setLikes] = useState<any[]>([]);
   const [guardados, setGuardados] = useState<string[]>([]);
   const [mostrarMensajes, setMostrarMensajes] = useState(false);
+  const [mensaje, setMensaje] = useState('');
+
 
   useEffect(() => {
     const obtenerDatosUsuario = async () => {
@@ -168,23 +171,24 @@ export default function TrabajadorHome() {
           <div><p className="font-bold text-x">30</p><span className="text-sm text-gray-600">Reseñas</span></div>
         </div>
         <nav className="flex flex-col gap-7 text-base text-gray-800 w-full px-2">
-          <a href="#" className="flex items-center gap-2 hover:text-blue-600 transition"><FaHome /> Inicio</a>
+          <a href="/dashboard/trabajador" className="flex items-center gap-2 hover:text-blue-600 transition"><FaHome /> Inicio</a>
           <a href="#" className="flex items-center gap-2 hover:text-blue-600 transition"><FaGlobe /> Explora</a>
+          <a href="/dashboard/trabajador/fotos" className="flex items-center gap-2 hover:text-blue-600 transition"><FaImages /> Fotos</a>
+          <a href="/dashboard/trabajador/chats" className="flex items-center gap-2 hover:text-blue-600 transition"><FaEnvelope /> Mensajes</a>
+          <a href="/dashboard/trabajador/notificaciones" className="flex items-center gap-2 hover:text-blue-600 transition"><FaBell /> Notificaciones</a>
           <a href="#" className="flex items-center gap-2 hover:text-blue-600 transition"><FaCog /> Ajustes</a>
-          <a href="#" className="flex items-center gap-2 hover:text-blue-600 transition"><FaEnvelope /> Mensajes</a>
-          <a href="#" className="flex items-center gap-2 hover:text-blue-600 transition"><FaBell /> Notificaciones</a>
           <a href="#" className="flex items-center gap-2 text-red-500"><FaSignOutAlt /> Salir</a>
         </nav>
       </aside>
 
       {/* Panel derecho - Sugerencias */}
       <aside className="w-70 bg-white px-4 py-6 fixed right-0 top-0 h-screen overflow-y-auto hidden lg:block">
-        <h3 className="text-sm font-semibold text-gray-700 px-2">Sugerencias para ti</h3>
+        <h3 className="text-m font-semibold text-gray-700 px-2">Sugerencias para ti</h3>
         <ul className="mt-3 space-y-4 px-2">
-          {["daelgg", "bethcast06", "ma.fer_mendoza"].map((user, i) => (
+          {["Lucia_12", "BrayanC", "J. Valerio"].map((user, i) => (
             <li key={i} className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <img src={`/images/user${i + 1}.jpg`} className="w-9 h-9 rounded-full object-cover" alt={user} />
+                <img src={`/images/editables/user${i + 1}.jpg`} className="w-9 h-9 rounded-full object-cover" alt={user} />
                 <div>
                   <p className="text-sm font-semibold text-gray-800">{user}</p>
                   <p className="text-xs text-gray-500">Sugerencia para ti</p>
@@ -199,17 +203,28 @@ export default function TrabajadorHome() {
       {/* Main content */}
       <main className="ml-64 mr-72 flex-1 overflow-y-auto bg-gray-50 scrollbar-hide">
         <div className="p-8">
-          <section className="mb-8">
-            <h1 className="text-2xl font-bold text-gray-800 mb-2">¡Bienvenido! 👋</h1>
-            <p className="text-gray-600 mb-4">Aquí puedes ver un resumen de tu actividad como trabajadora.</p>
-          </section>
+          <div className="w-1/2 relative mb-6 gap-4">
+            <span className="absolute left-4 top-2.5 text-gray-400">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 1110.5 3a7.5 7.5 0 016.15 13.65z" />
+              </svg>
+            </span>
+            <input
+              type="text"
+              placeholder="Buscar"
+              className="w-full pl-12 pr-4 py-2 border rounded-full shadow-sm text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+            />
+          </div>
 
           <section className="transition-all duration-300">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-2xl font-bold text-gray-800 mb-2">Tus Publicaciones</h2>
-              <Link href="/dashboard/trabajador/perfil" className="text-blue-600 hover:underline text-sm">Ver fotos</Link>
+              <Link href="/dashboard/trabajador/publicaciones/crear">
+                <button className="bg-gradient-to-r from-purple-400 to-blue-400 text-white px-4 py-2 rounded-full text-sm">
+                  + Nueva publicación
+                </button>
+              </Link>
             </div>
-
             {publicaciones.map((pub: any) => {
               const likeState = likes.find((l: any) => l.id === pub._id);
               return (
@@ -219,7 +234,16 @@ export default function TrabajadorHome() {
                       <img src="/images/foto_perfil.png" className="w-10 h-10 rounded-full object-cover" alt="usuario" />
                       <span className="font-semibold text-sm text-gray-800">Tú</span>
                     </div>
-                    <MenuOpciones id={pub._id} />
+                    <MenuOpciones
+                      id={pub._id}
+                      onEliminar={() => {
+                        setMensaje('✅ Publicación eliminada');
+                        setPublicaciones((prev) =>
+                          prev.filter((p) => p._id !== pub._id)
+                        );
+                        setTimeout(() => setMensaje(''), 3000);
+                      }}
+                    />
                   </div>
 
                   <img src={pub.imagen} alt="Publicación" className="w-full object-cover" />
@@ -254,6 +278,60 @@ export default function TrabajadorHome() {
           </section>
         </div>
       </main>
+      {/* Botón flotante para mensajes */}
+      {!mostrarMensajes && (
+        <div className="fixed bottom-6 right-6 z-50">
+          <button
+            onClick={() => setMostrarMensajes(true)}
+            className="flex items-center bg-gray-900 text-white px-5 py-2 rounded-full shadow-lg hover:bg-gray-800 transition"
+          >
+            <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M7 8h10M7 12h4m1 8l-6-6H5a2 2 0 01-2-2V5a2 2 0 012-2h14a2 2 0 012 2v7a2 2 0 01-2 2h-1l-6 6z" />
+            </svg>
+            Mensajes
+          </button>
+        </div>
+      )}
+
+      {/* Panel de mensajes */}
+      {mostrarMensajes && (
+        <div className="fixed bottom-6 right-6 w-90 max-w-full bg-[#1c1c1e] text-white rounded-2xl shadow-2xl border border-gray-700 z-50 overflow-hidden">
+          <div className="flex items-center justify-between px-4 py-3 border-b border-gray-700 bg-[#1c1c1e]">
+            <h2 className="text-lg font-semibold">Mensajes</h2>
+            <div className="flex items-center gap-3">
+              <button title="Expandir" className="hover:text-gray-300">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M15 3h6v6m-6 0L21 3M9 21H3v-6m6 0L3 21" />
+                </svg>
+              </button>
+              <button onClick={() => setMostrarMensajes(false)} className="text-xl hover:text-gray-300">&times;</button>
+            </div>
+          </div>
+          <div className="max-h-80 overflow-y-auto bg-[#1c1c1e]">
+            <div className="hover:bg-[#2c2c2e] px-4 py-3 cursor-pointer flex gap-4 items-center">
+              <img src="/images/editables/chat.jpg" className="w-10 h-10 rounded-full" />
+              <div>
+                <p className="font-semibold text-sm text-white">Lazaro.J3</p>
+                <p className="text-xs text-gray-400 truncate">Tú: Nada de andar en las chelas · 1 sem</p>
+              </div>
+            </div>
+            <div className="hover:bg-[#2c2c2e] px-4 py-3 cursor-pointer flex gap-4 items-center">
+              <img src="/images/editables/chat2.jpg" className="w-10 h-10 rounded-full" />
+              <div>
+                <p className="font-bold text-sm text-white">EFRABY</p>
+                <p className="text-xs text-gray-400 truncate">EFRABY envió un archivo adjunto · 5 sem</p>
+              </div>
+            </div>
+          </div>
+          <div className="flex justify-end p-3">
+            <button className="w-10 h-10 flex items-center justify-center rounded-full bg-[#2c2c2e] hover:bg-[#3a3a3c] text-white transition">
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
