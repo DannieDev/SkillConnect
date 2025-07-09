@@ -34,7 +34,11 @@ export default function ClienteHome() {
     const obtenerUsuario = async () => {
       try {
         const res = await axios.get('/api/auth/userinfo');
+<<<<<<< HEAD
         setUsuario(res.data.usuario); // ✅ Corregido aquí
+=======
+        setUsuario(res.data.usuario);
+>>>>>>> 7c6a2d6a7940ab333cdbc97e572a6d78fb7d2a44
       } catch (err) {
         console.error('Error al obtener usuario', err);
       }
@@ -58,11 +62,16 @@ export default function ClienteHome() {
     <div className="flex h-screen font-sans">
       {/* Sidebar */}
       <div className="w-64 bg-white shadow-lg flex flex-col items-center py-8">
+<<<<<<< HEAD
         <img src="/images/logo.png" alt="Logo" className="w-44 mb-6 ml-2 -mt-2" />
+=======
+        <img src="/images/logo.png" alt="Logo" className="w-44 mb-4 ml-4 -mt-2" />
+>>>>>>> 7c6a2d6a7940ab333cdbc97e572a6d78fb7d2a44
         <nav className="flex flex-col gap-7 text-base text-gray-800 w-full px-6">
           <a href="#" className="flex items-center gap-2 text-sm text-gray-700 hover:text-blue-600 transition"><FaHome className="text-xl" /> Inicio</a>
           <a href="#" className="flex items-center gap-2 text-sm text-gray-700 hover:text-blue-600 transition"><FaGlobe className="text-xl" /> Explora</a>
           <a href="#" className="flex items-center gap-2 text-sm text-gray-700 hover:text-blue-600 transition"><FaCog className="text-xl" /> Ajustes</a>
+<<<<<<< HEAD
           <a href="#" className="flex items-center gap-2 text-sm text-gray-700 hover:text-blue-600 transition"><FaEnvelope className="text-xl" /> Mensajes</a>
           <a href="#" className="flex items-center gap-2 text-sm text-gray-700 hover:text-blue-600 transition"><FaBell className="text-xl" /> Notificaciones</a>
           <a href="#" className="flex items-center gap-2 text-sm text-red-600 hover:text-red-800 transition mt-2"><FaSignOutAlt className="text-xl" /> Salir</a>
@@ -71,17 +80,30 @@ export default function ClienteHome() {
         {/* Perfil del usuario con botón de ver perfil */}
         <div className="mt-auto w-full px-6 border-t pt-4">
           <div className="flex items-center gap-3">
+=======
+          <a href="#" className="flex items-center gap-2 text-sm text-gray-700 hover:text-blue-600 transition"><FaEnvelope className="text-xl" /> Mensaje</a>
+          <a href="#" className="flex items-center gap-2 text-sm text-gray-700 hover:text-blue-600 transition"><FaBell className="text-xl" /> Notificaciones</a>
+          <a href="#" className="flex items-center gap-2 text-sm text-gray-700 hover:text-blue-600 transition"><FaSignOutAlt className="text-xl" /> Salir</a>
+        </nav>
+
+        {/* Perfil del usuario */}
+        <div className="mt-auto w-full px-6">
+          <div className="flex items-center gap-3 border-t pt-4">
+>>>>>>> 7c6a2d6a7940ab333cdbc97e572a6d78fb7d2a44
             <img src="/images/user.jpg" alt="Usuario" className="w-10 h-10 rounded-full object-cover" />
             <div className="text-sm leading-tight">
               <p className="font-semibold text-gray-900">{usuario?.nombre ?? 'Cargando...'}</p>
               <p className="text-gray-500 text-xs">{usuario?.email ?? ''}</p>
             </div>
           </div>
+<<<<<<< HEAD
           <div className="mt-3 text-left">
             <Link href="/dashboard/cliente/perfil" className="inline-block text-blue-600 text-sm font-medium hover:underline">
               👤 Ver perfil
             </Link>
           </div>
+=======
+>>>>>>> 7c6a2d6a7940ab333cdbc97e572a6d78fb7d2a44
         </div>
       </div>
 
@@ -132,6 +154,7 @@ export default function ClienteHome() {
           />
         </div>
 
+<<<<<<< HEAD
         {/* Grid de trabajadores */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
           {serviciosFiltrados.map((s) => (
@@ -148,6 +171,25 @@ export default function ClienteHome() {
             </Link>
           ))}
         </div>
+=======
+{/* Grid de trabajadores */}
+<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+  {serviciosFiltrados.map((s) => (
+    <Link key={s.id} href={`/cliente/detalle/${s.id}`}>
+      <div className="bg-white rounded-lg shadow p-4 hover:shadow-md transition cursor-pointer">
+        <img src={s.img} alt={s.titulo} className="w-full h-48 object-cover rounded mb-3" />
+        <p className="text-sm text-gray-500 mb-1">{s.categoria}</p>
+        <h2 className="text-[17px] font-semibold text-gray-900 mb-1">{s.titulo}</h2>
+        <p className="text-base text-gray-700 font-medium mb-1">${s.precio}</p>
+        <p className="text-xs text-gray-400">Disponible: {s.disponibilidad}</p>
+        <p className="text-xs text-gray-400 mb-2">Fecha: {s.fecha}</p>
+        <span className="text-blue-500 text-sm font-medium hover:underline">Ver más</span>
+      </div>
+    </Link>
+  ))}
+</div>
+
+>>>>>>> 7c6a2d6a7940ab333cdbc97e572a6d78fb7d2a44
       </div>
     </div>
   );
