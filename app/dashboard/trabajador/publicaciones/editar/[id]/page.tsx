@@ -62,16 +62,8 @@ export default function EditarPublicacionPage() {
         body: formData,
       });
 
-      if (!res.ok) {
-        throw new Error(`Error al subir la imagen: ${res.status}`);
-      }
-
       const data = await res.json();
-      if (!data.secure_url) {
-        throw new Error('No se recibió URL segura');
-      }
-
-      return data.secure_url;
+      return data.secure_url || null;
     } catch (err) {
       console.error('❌ Error subiendo imagen:', err);
       return null;
@@ -109,9 +101,9 @@ export default function EditarPublicacionPage() {
         }),
       });
 
-      const data = await res.json();
       if (!res.ok) {
-        throw new Error(data.error || 'Error al actualizar');
+        const errData = await res.json();
+        throw new Error(errData.error || 'Error al actualizar');
       }
 
       setMensaje('✅ Publicación actualizada');
@@ -122,14 +114,20 @@ export default function EditarPublicacionPage() {
   };
 
   return (
-    <main className="min-h-screen flex items-center justify-center bg-gray-100 px-4 sm:px-6 py-10">
-      <div className="bg-white p-6 sm:p-8 rounded-lg shadow-md w-full max-w-2xl">
-        <h1 className="text-2xl font-bold text-gray-800 mb-4">Editar Publicación</h1>
+    <div className="max-w-2xl mx-auto bg-white p-6 rounded-lg shadow-md mt-10">
+      <h1 className="text-2xl font-bold text-gray-800 mb-4">Editar Publicación</h1>
 
-        {error && <p className="text-red-600 mb-2">{error}</p>}
-        {mensaje && <p className="text-green-600 mb-2">{mensaje}</p>}
+      {error && <p className="text-red-600">{error}</p>}
+      {mensaje && <p className="text-green-600">{mensaje}</p>}
 
       <form onSubmit={handleSubmit} className="space-y-5">
+        <input
+          type="text"
+          placeholder="Título"
+          className="w-full border p-3 rounded-md"
+          value={titulo}
+          onChange={(e) => setTitulo(e.target.value)}
+        />
 
         <textarea
           placeholder="Descripción"
@@ -138,6 +136,29 @@ export default function EditarPublicacionPage() {
           className="w-full border p-3 rounded-md resize-none"
           rows={4}
           required
+        />
+
+        <input
+          type="number"
+          placeholder="Precio"
+          className="w-full border p-3 rounded-md"
+          value={precio}
+          onChange={(e) => setPrecio(e.target.value)}
+        />
+
+        <input
+          type="text"
+          placeholder="Disponibilidad (Ej: Mañana)"
+          className="w-full border p-3 rounded-md"
+          value={disponibilidad}
+          onChange={(e) => setDisponibilidad(e.target.value)}
+        />
+
+        <input
+          type="date"
+          className="w-full border p-3 rounded-md"
+          value={fecha}
+          onChange={(e) => setFecha(e.target.value)}
         />
 
         <select
@@ -152,7 +173,6 @@ export default function EditarPublicacionPage() {
           <option value="plomería">Plomería</option>
         </select>
 
-        {/* Imagen actual o vista previa */}
         {preview && (
           <img
             src={preview}
@@ -161,24 +181,20 @@ export default function EditarPublicacionPage() {
           />
         )}
 
-        {/* Input de archivo */}
-        <div>
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleFileChange}
-            className="block w-full text-sm text-gray-700 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-gradient-to-r file:from-purple-500 file:to-blue-500 file:text-white hover:file:from-purple-600 hover:file:to-blue-600"
-          />
-        </div>
+        <input
+          type="file"
+          accept="image/*"
+          onChange={handleFileChange}
+          className="block w-full text-sm text-gray-700 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-gradient-to-r file:from-purple-500 file:to-blue-500 file:text-white hover:file:from-purple-600 hover:file:to-blue-600"
+        />
 
-          <button
-            type="submit"
-            className="w-full bg-gradient-to-r from-purple-500 to-blue-500 text-white py-3 rounded-md text-lg font-semibold hover:from-purple-600 hover:to-blue-600 transition"
-          >
-            Guardar Cambios
-          </button>
-        </form>
-      </div>
-    </main>
+        <button
+          type="submit"
+          className="w-full bg-gradient-to-r from-purple-500 to-blue-500 text-white py-3 rounded-md text-lg font-semibold hover:from-purple-600 hover:to-blue-600 transition"
+        >
+          Guardar Cambios
+        </button>
+      </form>
+    </div>
   );
 }
