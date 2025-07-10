@@ -55,56 +55,52 @@ export default function ClienteHome() {
   });
 
   return (
-    <div className="flex h-screen font-sans">
+    <div className="flex flex-col md:flex-row h-screen overflow-hidden font-sans">
       {/* Sidebar */}
-      <div className="w-64 bg-white shadow-lg flex flex-col items-center py-8">
-        <img src="/images/logo.png" alt="Logo" className="w-44 mb-6 ml-2 -mt-2" />
-        <nav className="flex flex-col gap-7 text-base text-gray-800 w-full px-6">
-          <a href="#" className="flex items-center gap-2 text-sm text-gray-700 hover:text-blue-600 transition"><FaHome className="text-xl" /> Inicio</a>
-          <a href="#" className="flex items-center gap-2 text-sm text-gray-700 hover:text-blue-600 transition"><FaGlobe className="text-xl" /> Explora</a>
-          <a href="#" className="flex items-center gap-2 text-sm text-gray-700 hover:text-blue-600 transition"><FaCog className="text-xl" /> Ajustes</a>
-          <a href="#" className="flex items-center gap-2 text-sm text-gray-700 hover:text-blue-600 transition"><FaEnvelope className="text-xl" /> Mensajes</a>
-          <a href="#" className="flex items-center gap-2 text-sm text-gray-700 hover:text-blue-600 transition"><FaBell className="text-xl" /> Notificaciones</a>
-          <a href="#" className="flex items-center gap-2 text-sm text-red-600 hover:text-red-800 transition mt-2"><FaSignOutAlt className="text-xl" /> Salir</a>
+        <aside className="hidden md:flex w-full md:w-64 bg-white shadow-lg flex-col items-center justify-center py-8">
+        <img src="/images/logo.png" alt="Logo" className="w-40 mb-6" />
+          <nav className="flex flex-col gap-6 text-sm w-full px-6 items-center">
+          <a href="#" className="flex items-center gap-2 text-gray-700 hover:text-blue-600"><FaHome className="text-lg" /> Inicio</a>
+          <a href="#" className="flex items-center gap-2 text-gray-700 hover:text-blue-600"><FaGlobe className="text-lg" /> Explora</a>
+          <a href="#" className="flex items-center gap-2 text-gray-700 hover:text-blue-600"><FaCog className="text-lg" /> Ajustes</a>
+          <a href="#" className="flex items-center gap-2 text-gray-700 hover:text-blue-600"><FaEnvelope className="text-lg" /> Mensajes</a>
+          <a href="#" className="flex items-center gap-2 text-gray-700 hover:text-blue-600"><FaBell className="text-lg" /> Notificaciones</a>
+          <a href="#" className="flex items-center gap-2 text-red-600 hover:text-red-800 mt-2"><FaSignOutAlt className="text-lg" /> Salir</a>
         </nav>
-
-        {/* Perfil del usuario con botón de ver perfil */}
         <div className="mt-auto w-full px-6 border-t pt-4">
           <div className="flex items-center gap-3">
             <img src="/images/user.jpg" alt="Usuario" className="w-10 h-10 rounded-full object-cover" />
-            <div className="text-sm leading-tight">
+            <div className="text-sm">
               <p className="font-semibold text-gray-900">{usuario?.nombre ?? 'Cargando...'}</p>
               <p className="text-gray-500 text-xs">{usuario?.email ?? ''}</p>
             </div>
           </div>
-          <div className="mt-3 text-left">
-            <Link href="/dashboard/cliente/perfil" className="inline-block text-blue-600 text-sm font-medium hover:underline">
+          <div className="mt-2">
+            <Link href="/dashboard/cliente/perfil" className="text-blue-600 text-sm font-medium hover:underline">
               👤 Ver perfil
             </Link>
           </div>
         </div>
-      </div>
+      </aside>
 
       {/* Main content */}
-      <div className="flex-1 bg-gray-50 p-10 overflow-auto">
+      <main className="flex-1 bg-gray-50 p-5 md:p-10 overflow-y-auto">
         <h1 className="text-2xl font-semibold mb-1">Inicio</h1>
-        <p className="text-sm text-gray-500 mb-4">
-          ¡Bienvenido{usuario?.nombre ? `, ${usuario.nombre}` : ''}!
-        </p>
+        <p className="text-sm text-gray-500 mb-4">¡Bienvenido{usuario?.nombre ? `, ${usuario.nombre}` : ''}!</p>
 
-        {/* Buscador y filtros */}
+        {/* Filtros */}
         <div className="flex flex-wrap gap-2 mb-6">
           <input
             type="text"
             placeholder="Buscar servicios..."
-            className="border px-5 py-[5px] rounded-md text-sm"
+            className="border px-4 py-2 rounded-md text-sm w-full sm:w-auto"
             value={busqueda}
             onChange={(e) => setBusqueda(e.target.value)}
           />
           <select
             value={categoriaFiltro}
             onChange={(e) => setCategoriaFiltro(e.target.value)}
-            className="border px-5 py-[5px] rounded-md text-sm"
+            className="border px-4 py-2 rounded-md text-sm w-full sm:w-auto"
           >
             <option value="">Categoría</option>
             <option value="Limpieza">Limpieza</option>
@@ -117,7 +113,7 @@ export default function ClienteHome() {
           <select
             value={disponibilidadFiltro}
             onChange={(e) => setDisponibilidadFiltro(e.target.value)}
-            className="border px-5 py-[5px] rounded-md text-sm"
+            className="border px-4 py-2 rounded-md text-sm w-full sm:w-auto"
           >
             <option value="">Disponibilidad</option>
             <option value="Mañana">Mañana</option>
@@ -128,19 +124,19 @@ export default function ClienteHome() {
             type="date"
             value={fechaFiltro}
             onChange={(e) => setFechaFiltro(e.target.value)}
-            className="border px-5 py-[5px] rounded-md text-sm"
+            className="border px-4 py-2 rounded-md text-sm w-full sm:w-auto"
           />
         </div>
 
-        {/* Grid de trabajadores */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+        {/* Servicios */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {serviciosFiltrados.map((s) => (
             <Link key={s.id} href={`/cliente/detalle/${s.id}`}>
-              <div className="bg-white rounded-lg shadow p-4 hover:shadow-md transition cursor-pointer">
-                <img src={s.img} alt={s.titulo} className="w-full h-48 object-cover rounded mb-3" />
-                <p className="text-sm text-gray-500 mb-1">{s.categoria}</p>
-                <h2 className="text-[17px] font-semibold text-gray-900 mb-1">{s.titulo}</h2>
-                <p className="text-base text-gray-700 font-medium mb-1">${s.precio}</p>
+              <div className="bg-white rounded-lg shadow-md p-4 hover:shadow-lg transition cursor-pointer">
+                <img src={s.img} alt={s.titulo} className="w-full h-44 object-cover rounded mb-3" />
+                <p className="text-sm text-gray-500">{s.categoria}</p>
+                <h2 className="text-lg font-semibold text-gray-800">{s.titulo}</h2>
+                <p className="text-gray-700 font-medium mb-1">${s.precio}</p>
                 <p className="text-xs text-gray-400">Disponible: {s.disponibilidad}</p>
                 <p className="text-xs text-gray-400 mb-2">Fecha: {s.fecha}</p>
                 <span className="text-blue-500 text-sm font-medium hover:underline">Ver más</span>
@@ -148,7 +144,7 @@ export default function ClienteHome() {
             </Link>
           ))}
         </div>
-      </div>
+      </main>
     </div>
   );
 }

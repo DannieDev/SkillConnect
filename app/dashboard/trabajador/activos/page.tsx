@@ -22,15 +22,16 @@ export default function TrabajadorActivosPage() {
   ];
 
   return (
-    <main className="min-h-screen bg-gray-100 p-6">
-      <div className="max-w-4xl mx-auto bg-white rounded-lg shadow p-6">
-        <div className="flex items-center justify-between mb-4">
-          <h1 className="text-xl font-bold text-blue-900">Contrataciones activas</h1>
+    <main className="min-h-screen bg-gray-100 px-4 py-6 sm:px-6 lg:px-8">
+      <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-md p-5 sm:p-6">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-6">
+          <h1 className="text-2xl font-bold text-blue-900">Contrataciones activas</h1>
           <button
             onClick={() => router.back()}
             className="flex items-center text-sm text-blue-600 hover:underline"
           >
-            <FaArrowLeft className="mr-1" /> Volver
+            <FaArrowLeft className="mr-1" />
+            Volver
           </button>
         </div>
 
@@ -41,22 +42,30 @@ export default function TrabajadorActivosPage() {
             {serviciosActivos.map((item, index) => (
               <li
                 key={index}
-                className="p-4 bg-gray-50 border border-gray-200 rounded-lg flex flex-col md:flex-row justify-between items-start md:items-center"
+                className="p-4 bg-gray-50 border border-gray-200 rounded-lg flex flex-col md:flex-row md:justify-between md:items-center gap-2"
               >
                 <div>
                   <p className="font-semibold text-gray-800">{item.cliente}</p>
                   <p className="text-sm text-gray-600">{item.servicio}</p>
                   <p className="text-xs text-gray-400">Fecha: {item.fecha}</p>
                 </div>
-                <div className="mt-2 md:mt-0 flex items-center text-sm font-medium">
+                <div className="flex items-center text-sm font-medium text-gray-700">
                   {item.estado === 'En progreso' ? (
-                    <FaCheckCircle className="text-green-500 mr-1" />
+                    <>
+                      <FaCheckCircle className="text-green-500 mr-1" />
+                      En progreso
+                    </>
                   ) : item.estado === 'Pendiente' ? (
-                    <FaClock className="text-yellow-500 mr-1" />
+                    <>
+                      <FaClock className="text-yellow-500 mr-1" />
+                      Pendiente
+                    </>
                   ) : (
-                    <FaTimesCircle className="text-red-500 mr-1" />
+                    <>
+                      <FaTimesCircle className="text-red-500 mr-1" />
+                      Cancelado
+                    </>
                   )}
-                  {item.estado}
                 </div>
               </li>
             ))}

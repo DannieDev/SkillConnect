@@ -26,12 +26,7 @@ export default function TrabajadorServiciosPage() {
   const cargarServicios = async () => {
     const res = await fetch('/api/servicios');
     const data = await res.json();
-    if (Array.isArray(data)) {
-      setServicios(data);
-    } else {
-      console.error('Respuesta inválida desde API /api/servicios:', data);
-      setServicios([]);
-    }
+    setServicios(Array.isArray(data) ? data : []);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -54,43 +49,26 @@ export default function TrabajadorServiciosPage() {
   const handleEliminar = async (id: string) => {
     if (!confirm('¿Estás seguro de eliminar este servicio?')) return;
 
-    const res = await fetch(`/api/servicios/${id}`, {
-      method: 'DELETE',
-    });
-
-    if (res.ok) {
-      cargarServicios();
-    } else {
-      alert('Error al eliminar el servicio');
-    }
+    const res = await fetch(`/api/servicios/${id}`, { method: 'DELETE' });
+    if (res.ok) cargarServicios();
+    else alert('Error al eliminar el servicio');
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
     const url = servicioEditandoId
       ? `/api/servicios/${servicioEditandoId}`
       : '/api/servicios';
-
     const method = servicioEditandoId ? 'PUT' : 'POST';
 
     const res = await fetch(url, {
       method,
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        ...formulario,
-        trabajadorId: '123456789'
-      })
+      body: JSON.stringify({ ...formulario, trabajadorId: '123456789' })
     });
 
     if (res.ok) {
-      setFormulario({
-        titulo: '',
-        descripcion: '',
-        precio: '',
-        categoria: '',
-        disponibilidad: ''
-      });
+      setFormulario({ titulo: '', descripcion: '', precio: '', categoria: '', disponibilidad: '' });
       setMostrarFormulario(false);
       setModoEdicion(false);
       setServicioEditandoId(null);
@@ -101,9 +79,9 @@ export default function TrabajadorServiciosPage() {
   };
 
   return (
-    <main className="min-h-screen bg-gray-100 p-6">
-      <div className="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow">
-        <div className="flex justify-between items-center mb-4">
+    <main className="min-h-screen bg-gray-100 px-4 py-8">
+      <div className="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-md">
+        <div className="flex justify-between items-center mb-6">
           <h1 className="text-xl font-bold text-blue-900">Mis servicios ofrecidos</h1>
           <button
             onClick={() => router.back()}
@@ -118,28 +96,21 @@ export default function TrabajadorServiciosPage() {
             setMostrarFormulario(!mostrarFormulario);
             setModoEdicion(false);
             setServicioEditandoId(null);
-            setFormulario({
-              titulo: '',
-              descripcion: '',
-              precio: '',
-              categoria: '',
-              disponibilidad: ''
-            });
+            setFormulario({ titulo: '', descripcion: '', precio: '', categoria: '', disponibilidad: '' });
           }}
           className="flex items-center gap-2 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 mb-6"
         >
-          <FaPlus />
-          Agregar nuevo servicio
+          <FaPlus /> Agregar nuevo servicio
         </button>
 
         {mostrarFormulario && (
-          <form onSubmit={handleSubmit} className="mb-6 space-y-2">
+          <form onSubmit={handleSubmit} className="mb-6 space-y-4">
             <input
               name="titulo"
               placeholder="Título"
               value={formulario.titulo}
               onChange={handleChange}
-              className="w-full border p-2 rounded"
+              className="w-full border p-3 rounded"
               required
             />
             <textarea
@@ -147,7 +118,7 @@ export default function TrabajadorServiciosPage() {
               placeholder="Descripción"
               value={formulario.descripcion}
               onChange={handleChange}
-              className="w-full border p-2 rounded"
+              className="w-full border p-3 rounded"
               required
             />
             <input
@@ -156,7 +127,7 @@ export default function TrabajadorServiciosPage() {
               placeholder="Precio"
               value={formulario.precio}
               onChange={handleChange}
-              className="w-full border p-2 rounded"
+              className="w-full border p-3 rounded"
               required
             />
             <input
@@ -164,7 +135,7 @@ export default function TrabajadorServiciosPage() {
               placeholder="Categoría"
               value={formulario.categoria}
               onChange={handleChange}
-              className="w-full border p-2 rounded"
+              className="w-full border p-3 rounded"
               required
             />
             <input
@@ -172,12 +143,12 @@ export default function TrabajadorServiciosPage() {
               placeholder="Disponibilidad"
               value={formulario.disponibilidad}
               onChange={handleChange}
-              className="w-full border p-2 rounded"
+              className="w-full border p-3 rounded"
               required
             />
             <button
               type="submit"
-              className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+              className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
             >
               {modoEdicion ? 'Actualizar servicio' : 'Guardar servicio'}
             </button>
@@ -193,7 +164,9 @@ export default function TrabajadorServiciosPage() {
               <div>
                 <h3 className="text-md font-bold text-gray-800">{servicio.titulo}</h3>
                 <p className="text-sm text-gray-600">{servicio.descripcion}</p>
-                <p className="text-sm text-blue-800 font-semibold mt-1">${servicio.precio} MXN</p>
+                <p className="text-sm text-blue-800 font-semibold mt-1">
+                  ${servicio.precio} MXN
+                </p>
               </div>
               <div className="flex gap-3 mt-4 md:mt-0">
                 <button

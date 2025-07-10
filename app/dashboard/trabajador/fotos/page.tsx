@@ -56,33 +56,33 @@ const FotosTrabajador: React.FC = () => {
   };
 
   return (
-    <div className="flex h-screen overflow-hidden">
+    <div className="flex flex-col lg:flex-row min-h-screen bg-gray-50">
       {/* Sidebar izquierdo */}
-      <aside className="w-70 bg-white shadow-md px-6 py-8 flex flex-col items-center fixed h-screen">
+      <aside className="hidden lg:flex w-64 bg-white shadow-md px-6 py-8 flex-col items-center fixed h-full">
         <img src="/images/logo_corto.png" alt="SkillConnect" className="h-10 mb-8" />
-        <img src="/images/foto_perfil.png" alt="Perfil" className="w-30 h-30 rounded-full border-4 border-white shadow-md mb-2 object-cover" />
-        <h2 className="text-2xl font-bold">{nombre || 'Nombre del trabajador'}</h2>
-        <p className="text-sm text-gray-600">{email || 'correo@ejemplo.com'}</p>
+        <img src="/images/foto_perfil.png" alt="Perfil" className="w-24 h-24 rounded-full border-4 border-white shadow-md mb-2 object-cover" />
+        <h2 className="text-xl font-bold text-center">{nombre || 'Nombre del trabajador'}</h2>
+        <p className="text-sm text-gray-600 mb-4 text-center">{email || 'correo@ejemplo.com'}</p>
         <div className="flex gap-4 text-center mb-6">
-          <div><p className="font-bold text-x">{publicaciones.length}</p><span className="text-sm text-gray-600">Publicaciones</span></div>
-          <div><p className="font-bold text-x">4.8</p><span className="text-sm text-gray-600">Calificación</span></div>
-          <div><p className="font-bold text-x">30</p><span className="text-sm text-gray-600">Reseñas</span></div>
+          <div><p className="font-bold">{publicaciones.length}</p><span className="text-sm text-gray-600">Publicaciones</span></div>
+          <div><p className="font-bold">4.8</p><span className="text-sm text-gray-600">Calificación</span></div>
+          <div><p className="font-bold">30</p><span className="text-sm text-gray-600">Reseñas</span></div>
         </div>
-        <nav className="flex flex-col gap-7 text-base text-gray-800 w-full px-2">
-          <a href="/dashboard/trabajador" className="flex items-center gap-2 hover:text-blue-600 transition"><FaHome /> Inicio</a>
-          <a href="#" className="flex items-center gap-2 hover:text-blue-600 transition"><FaGlobe /> Explora</a>
-          <a href="/dashboard/trabajador/fotos" className="flex items-center gap-2 hover:text-blue-600 transition"><FaImages /> Fotos</a>
-          <a href="/dashboard/trabajador/chats" className="flex items-center gap-2 hover:text-blue-600 transition"><FaEnvelope /> Mensajes</a>
-          <a href="/dashboard/trabajador/notificaciones" className="flex items-center gap-2 hover:text-blue-600 transition"><FaBell /> Notificaciones</a>
-          <a href="#" className="flex items-center gap-2 hover:text-blue-600 transition"><FaCog /> Ajustes</a>
+        <nav className="flex flex-col gap-6 text-sm text-gray-800 w-full">
+          <a href="/dashboard/trabajador" className="flex items-center gap-2 hover:text-blue-600"><FaHome /> Inicio</a>
+          <a href="#" className="flex items-center gap-2 hover:text-blue-600"><FaGlobe /> Explora</a>
+          <a href="/dashboard/trabajador/fotos" className="flex items-center gap-2 hover:text-blue-600"><FaImages /> Fotos</a>
+          <a href="/dashboard/trabajador/chats" className="flex items-center gap-2 hover:text-blue-600"><FaEnvelope /> Mensajes</a>
+          <a href="/dashboard/trabajador/notificaciones" className="flex items-center gap-2 hover:text-blue-600"><FaBell /> Notificaciones</a>
+          <a href="#" className="flex items-center gap-2 hover:text-blue-600"><FaCog /> Ajustes</a>
           <a href="#" className="flex items-center gap-2 text-red-500"><FaSignOutAlt /> Salir</a>
         </nav>
       </aside>
 
       {/* Contenido principal */}
-      <main className="ml-64 flex-1 px-10 py-6">
-        <div className="flex justify-between items-center mb-6">
-          <div className="w-1/2 relative mb-6 gap-4">
+      <main className="w-full lg:ml-64 px-4 sm:px-6 py-6">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+          <div className="w-full sm:w-1/2 relative">
             <span className="absolute left-4 top-2.5 text-gray-400">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 1110.5 3a7.5 7.5 0 016.15 13.65z" />
@@ -102,7 +102,8 @@ const FotosTrabajador: React.FC = () => {
           </button>
         </div>
 
-        <h2 className="text-2xl font-bold text-gray-800 mb-2">Tus Fotos</h2>
+        <h2 className="text-2xl font-bold text-gray-800 mb-4">Tus Fotos</h2>
+
         <div className="columns-1 sm:columns-2 md:columns-3 gap-4 space-y-4">
           {publicaciones.map((pub) => {
             const likeState = likes.find((l) => l.id === pub._id);
@@ -110,7 +111,6 @@ const FotosTrabajador: React.FC = () => {
             return (
               <div key={pub._id} className="break-inside-avoid rounded-lg overflow-hidden shadow-sm bg-white mb-4">
                 <img src={pub.imagen} alt="Publicación" className="w-full object-cover rounded-t-md" />
-
                 <div className="flex justify-between items-center text-sm text-gray-600 px-3 py-2">
                   <button
                     onClick={() => toggleLike(pub._id)}

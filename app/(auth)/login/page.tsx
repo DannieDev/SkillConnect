@@ -50,13 +50,7 @@ export default function LoginPage() {
       localStorage.setItem('token', data.token);
       localStorage.setItem('rol', data.usuario.tipo);
 
-      console.log(data.token);
-
-<<<<<<< HEAD
       router.push(data.usuario.tipo === 'trabajador' ? '/dashboard/trabajador' : '/cliente/home');
-=======
-      router.push(data.usuario.tipo === 'trabajador' ? '/dashboard/trabajador' : '/dashboard/cliente');
->>>>>>> 7c6a2d6a7940ab333cdbc97e572a6d78fb7d2a44
 
     } catch (err) {
       console.error(err);
@@ -65,10 +59,11 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="h-screen flex overflow-hidden">
-      <div className="w-full lg:w-1/2 flex items-center justify-center p-8 bg-white">
-        <div className="w-full max-w-sm scale-[0.82]">
-          <h1 className="text-3xl font-bold text-blue-900 mb-6">Iniciar Sesión</h1>
+    <div className="flex flex-col lg:flex-row h-screen overflow-hidden">
+      {/* Formulario */}
+      <div className="w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-12 bg-white">
+        <div className="w-full max-w-sm">
+          <h1 className="text-3xl font-bold text-blue-900 mb-6 text-center lg:text-left">Iniciar Sesión</h1>
 
           {error && (
             <div className="flex items-center gap-2 mb-4 p-3 bg-red-50 text-red-600 rounded-lg">
@@ -88,7 +83,7 @@ export default function LoginPage() {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full pl-10 pr-3 py-2 border border-gray-600 rounded-lg placeholder-gray-400 text-gray-900 bg-white"
+                  className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg placeholder-gray-400 text-gray-900 bg-white"
                   placeholder="name@email.com"
                   required
                 />
@@ -105,24 +100,22 @@ export default function LoginPage() {
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full pl-10 pr-3 py-2 border border-gray-600 rounded-lg placeholder-gray-400 text-gray-900 bg-white"
+                  className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg placeholder-gray-400 text-gray-900 bg-white"
                   placeholder="••••••••"
                   required
                 />
               </div>
             </div>
-            <div className="flex items-center justify-between">
-              <div className="flex items-center">
+
+            <div className="flex items-center justify-between text-sm">
+              <label className="flex items-center gap-2 text-gray-700">
                 <input
-                  id="remember"
                   type="checkbox"
-                  className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                  className="h-4 w-4 text-blue-600 border-gray-300 rounded"
                 />
-                <label htmlFor="remember" className="ml-2 block text-sm text-gray-700">
-                  Recuérdame
-                </label>
-              </div>
-              <Link href="/forgot-password" className="text-sm text-blue-600 hover:underline">
+                Recuérdame
+              </label>
+              <Link href="/forgot-password" className="text-blue-600 hover:underline">
                 ¿Olvidaste tu contraseña?
               </Link>
             </div>
@@ -147,30 +140,31 @@ export default function LoginPage() {
           <div className="grid grid-cols-2 gap-3">
             <button
               type="button"
-              className="w-full flex items-center justify-center gap-2 bg-white border border-gray-300 text-gray-700 py-2 px-4 rounded-lg hover:bg-gray-50 transition-colors"
+              className="flex items-center justify-center gap-2 border border-gray-300 py-2 px-4 rounded-lg hover:bg-gray-50 transition-colors"
             >
               <FcGoogle className="h-5 w-5" />
               Google
             </button>
             <button
               type="button"
-              className="w-full flex items-center justify-center gap-2 bg-white border border-gray-300 text-gray-700 py-2 px-4 rounded-lg hover:bg-gray-50 transition-colors"
+              className="flex items-center justify-center gap-2 border border-gray-300 py-2 px-4 rounded-lg hover:bg-gray-50 transition-colors"
             >
               <FaGithub className="h-5 w-5" />
               GitHub
             </button>
           </div>
 
-          <div className="mt-6 text-end text-sm text-gray-600">
+          <div className="mt-6 text-sm text-center text-gray-600">
             ¿No tienes cuenta?{' '}
-            <Link href="/register" className="font-medium text-blue-600 hover:underline">
+            <Link href="/register" className="text-blue-600 font-medium hover:underline">
               Regístrate
             </Link>
           </div>
         </div>
       </div>
 
-      <div className="hidden lg:block lg:w-1/2 relative">
+      {/* Imagen derecha */}
+      <div className="hidden lg:block lg:w-1/2 relative h-full">
         <Image
           src="/images/login.png"
           alt="Ilustración de trabajo"

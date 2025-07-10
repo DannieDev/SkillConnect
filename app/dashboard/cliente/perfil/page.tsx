@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import {
   FaSignOutAlt, FaHome, FaGlobe, FaCog, FaCommentDots, FaBell,
-  FaEnvelope, FaPhoneAlt, FaMapMarkerAlt, FaCalendarAlt,
   FaCheckCircle, FaClock
 } from 'react-icons/fa';
 
@@ -17,9 +16,6 @@ export default function PerfilCliente() {
     email: '',
     foto: '/images/user.jpg',
     serviciosContratados: 0,
-    telefono: '---',
-    direccion: '---',
-    activoDesde: '---'
   });
 
   useEffect(() => {
@@ -31,10 +27,7 @@ export default function PerfilCliente() {
           ...prev,
           nombre: usuario.nombre,
           email: usuario.email,
-          serviciosContratados: 12, // dinámico si se desea después
-          telefono: usuario.telefono ?? '5512345678',
-          direccion: usuario.direccion ?? 'CDMX, México',
-          activoDesde: usuario.activoDesde ?? '2023-11-10'
+          serviciosContratados: 12,
         }));
       } catch (err) {
         console.error('Error al obtener datos del cliente', err);
@@ -59,76 +52,58 @@ export default function PerfilCliente() {
   ];
 
   return (
-    <div className="flex bg-gray-50 min-h-screen">
+    <div className="flex flex-col md:flex-row bg-gray-50 min-h-screen">
       {/* Sidebar */}
-      <aside className="w-72 bg-white border-r flex flex-col justify-between px-6 py-8">
-        <div>
-          {/* Logo */}
-          <div className="flex justify-center mb-6">
-            <img src="/images/logo.png" alt="SkillConnect" className="h-10" />
-          </div>
-
-          {/* Usuario */}
-          <div className="flex flex-col items-center text-center mb-6">
-            <img
-              src={cliente.foto}
-              alt="Foto de perfil"
-              className="w-24 h-24 rounded-full object-cover border mb-3"
-            />
-            <h2 className="text-lg font-bold">{cliente.nombre}</h2>
-            <p className="text-sm text-gray-500">{cliente.email}</p>
-          </div>
-
-          {/* Info adicional */}
-          <ul className="space-y-3 text-sm text-gray-700 mb-8">
-            <li className="flex items-center gap-2">
-              <FaPhoneAlt className="text-green-500" />
-              {cliente.telefono}
-            </li>
-            <li className="flex items-center gap-2">
-              <FaMapMarkerAlt className="text-red-500" />
-              {cliente.direccion}
-            </li>
-            <li className="flex items-center gap-2">
-              <FaCalendarAlt className="text-purple-500" />
-              Desde: {cliente.activoDesde}
-            </li>
-          </ul>
-
-          {/* Menú */}
-          <nav className="flex flex-col gap-4 text-sm text-gray-700">
-            <div className="flex items-center gap-2 hover:text-blue-600 cursor-pointer">
-              <FaHome />
-              <span>Inicio</span>
-            </div>
-            <div className="flex items-center gap-2 hover:text-blue-600 cursor-pointer">
-              <FaGlobe />
-              <span>Explora</span>
-            </div>
-            <div className="flex items-center gap-2 hover:text-blue-600 cursor-pointer">
-              <FaCog />
-              <span>Ajustes</span>
-            </div>
-            <div className="flex items-center gap-2 hover:text-blue-600 cursor-pointer">
-              <FaCommentDots />
-              <span>Mensajes</span>
-            </div>
-            <div className="flex items-center gap-2 hover:text-blue-600 cursor-pointer">
-              <FaBell />
-              <span>Notificaciones</span>
-            </div>
-          </nav>
+      <aside className="w-full md:w-72 bg-white border-r px-6 py-8 flex flex-col items-center">
+        {/* Logo */}
+        <div className="mb-6">
+          <img src="/images/logo.png" alt="SkillConnect" className="h-10 mx-auto" />
         </div>
 
-        {/* Salir */}
-        <button className="flex items-center gap-2 text-red-600 hover:underline text-sm mt-10">
+        {/* Usuario */}
+        <div className="text-center mb-6">
+          <img
+            src={cliente.foto}
+            alt="Foto de perfil"
+            className="w-24 h-24 rounded-full object-cover border mb-3 mx-auto"
+          />
+          <h2 className="text-lg font-bold">{cliente.nombre}</h2>
+          <p className="text-sm text-gray-500">{cliente.email}</p>
+        </div>
+
+        {/* Menú */}
+        <nav className="flex flex-col gap-4 text-sm text-gray-700 w-full items-center mb-6">
+          <div className="flex items-center gap-2 hover:text-blue-600 cursor-pointer">
+            <FaHome />
+            <span>Inicio</span>
+          </div>
+          <div className="flex items-center gap-2 hover:text-blue-600 cursor-pointer">
+            <FaGlobe />
+            <span>Explora</span>
+          </div>
+          <div className="flex items-center gap-2 hover:text-blue-600 cursor-pointer">
+            <FaCog />
+            <span>Ajustes</span>
+          </div>
+          <div className="flex items-center gap-2 hover:text-blue-600 cursor-pointer">
+            <FaCommentDots />
+            <span>Mensajes</span>
+          </div>
+          <div className="flex items-center gap-2 hover:text-blue-600 cursor-pointer">
+            <FaBell />
+            <span>Notificaciones</span>
+          </div>
+        </nav>
+
+        {/* Botón salir */}
+        <button className="flex items-center gap-2 text-red-600 hover:underline text-sm">
           <FaSignOutAlt />
-          Salir
+          <span>Salir</span>
         </button>
       </aside>
 
       {/* Main */}
-      <main className="flex-1 p-10">
+      <main className="flex-1 p-6 md:p-10">
         <h1 className="text-3xl font-bold mb-6">
           👋 ¡Hola, {cliente.nombre !== 'Cargando...' ? cliente.nombre.split(' ')[0] : 'cliente'}!
         </h1>

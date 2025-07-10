@@ -56,14 +56,10 @@ export default function EditarPublicacionPage() {
         body: formData,
       });
 
-      if (!res.ok) {
-        throw new Error(`Error al subir la imagen: ${res.status}`);
-      }
+      if (!res.ok) throw new Error(`Error al subir la imagen: ${res.status}`);
 
       const data = await res.json();
-      if (!data.secure_url) {
-        throw new Error('No se recibió URL segura');
-      }
+      if (!data.secure_url) throw new Error('No se recibió URL segura');
 
       return data.secure_url;
     } catch (err) {
@@ -97,9 +93,7 @@ export default function EditarPublicacionPage() {
       });
 
       const data = await res.json();
-      if (!res.ok) {
-        throw new Error(data.error || 'Error al actualizar');
-      }
+      if (!res.ok) throw new Error(data.error || 'Error al actualizar');
 
       setMensaje('✅ Publicación actualizada');
       setTimeout(() => router.push('/dashboard/trabajador'), 1500);
@@ -109,61 +103,65 @@ export default function EditarPublicacionPage() {
   };
 
   return (
-    <div className="max-w-2xl mx-auto bg-white p-6 rounded-lg shadow-md mt-10">
-      <h1 className="text-2xl font-bold text-gray-800 mb-4">Editar Publicación</h1>
+    <main className="min-h-screen flex items-center justify-center bg-gray-100 px-4 sm:px-6 py-10">
+      <div className="bg-white p-6 sm:p-8 rounded-lg shadow-md w-full max-w-2xl">
+        <h1 className="text-2xl font-bold text-gray-800 mb-4">Editar Publicación</h1>
 
-      {error && <p className="text-red-600">{error}</p>}
-      {mensaje && <p className="text-green-600">{mensaje}</p>}
+        {error && <p className="text-red-600 mb-2">{error}</p>}
+        {mensaje && <p className="text-green-600 mb-2">{mensaje}</p>}
 
-      <form onSubmit={handleSubmit} className="space-y-5">
-
-        <textarea
-          placeholder="Descripción"
-          value={descripcion}
-          onChange={(e) => setDescripcion(e.target.value)}
-          className="w-full border p-3 rounded-md resize-none"
-          rows={4}
-          required
-        />
-
-        <select
-          value={categoria}
-          onChange={(e) => setCategoria(e.target.value)}
-          className="w-full border p-3 rounded-md bg-white"
-        >
-          <option value="">Selecciona una categoría</option>
-          <option value="electricidad">Electricidad</option>
-          <option value="jardinería">Jardinería</option>
-          <option value="limpieza">Limpieza</option>
-          <option value="plomería">Plomería</option>
-        </select>
-
-        {/* Imagen actual o vista previa */}
-        {preview && (
-          <img
-            src={preview}
-            alt="Vista previa"
-            className="w-full max-h-64 object-cover rounded-md"
+        <form onSubmit={handleSubmit} className="space-y-5">
+          <textarea
+            placeholder="Descripción"
+            value={descripcion}
+            onChange={(e) => setDescripcion(e.target.value)}
+            className="w-full border border-gray-300 p-3 rounded-md resize-none focus:ring-2 focus:ring-blue-400"
+            rows={4}
+            required
           />
-        )}
 
-        {/* Input de archivo */}
-        <div>
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleFileChange}
-            className="block w-full text-sm text-gray-700 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-gradient-to-r file:from-purple-500 file:to-blue-500 file:text-white hover:file:from-purple-600 hover:file:to-blue-600"
-          />
-        </div>
+          <select
+            value={categoria}
+            onChange={(e) => setCategoria(e.target.value)}
+            className="w-full border border-gray-300 p-3 rounded-md bg-white focus:ring-2 focus:ring-blue-400"
+          >
+            <option value="">Selecciona una categoría</option>
+            <option value="electricidad">Electricidad</option>
+            <option value="jardinería">Jardinería</option>
+            <option value="limpieza">Limpieza</option>
+            <option value="plomería">Plomería</option>
+          </select>
 
-        <button
-          type="submit"
-          className="w-full bg-gradient-to-r from-purple-500 to-blue-500 text-white py-3 rounded-md text-lg font-semibold hover:from-purple-600 hover:to-blue-600 transition"
-        >
-          Guardar Cambios
-        </button>
-      </form>
-    </div>
+          {preview && (
+            <img
+              src={preview}
+              alt="Vista previa"
+              className="w-full max-h-64 object-cover rounded-md"
+            />
+          )}
+
+          <div>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleFileChange}
+              className="block w-full text-sm text-gray-700
+                file:mr-4 file:py-2 file:px-4
+                file:rounded-full file:border-0
+                file:text-sm file:font-semibold
+                file:bg-gradient-to-r file:from-purple-500 file:to-blue-500
+                file:text-white hover:file:from-purple-600 hover:file:to-blue-600"
+            />
+          </div>
+
+          <button
+            type="submit"
+            className="w-full bg-gradient-to-r from-purple-500 to-blue-500 text-white py-3 rounded-md text-lg font-semibold hover:from-purple-600 hover:to-blue-600 transition"
+          >
+            Guardar Cambios
+          </button>
+        </form>
+      </div>
+    </main>
   );
 }
