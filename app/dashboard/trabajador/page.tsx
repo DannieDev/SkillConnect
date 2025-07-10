@@ -16,6 +16,8 @@ import {
   FaRegBookmark,
   FaRegComment,
   FaImages,
+  FaBars,
+  FaTimes,
 } from 'react-icons/fa';
 
 function MenuOpciones({ id, onEliminar }: { id: string; onEliminar: () => void }) {
@@ -97,7 +99,6 @@ function MenuOpciones({ id, onEliminar }: { id: string; onEliminar: () => void }
     </div>
   );
 }
-
 export default function TrabajadorHome() {
   const router = useRouter();
   const [nombre, setNombre] = useState('');
@@ -107,13 +108,13 @@ export default function TrabajadorHome() {
   const [guardados, setGuardados] = useState<string[]>([]);
   const [mostrarMensajes, setMostrarMensajes] = useState(false);
   const [mensaje, setMensaje] = useState('');
-
+  const [menuAbierto, setMenuAbierto] = useState(false);
 
   useEffect(() => {
     const obtenerDatosUsuario = async () => {
       try {
         const res = await axios.get('/api/auth/userinfo');
-        setNombre(res.data.usuario?.nombre || ''); // ✅ accede como .usuario.nombre
+        setNombre(res.data.usuario?.nombre || '');
         setEmail(res.data.usuario?.email || '');
       } catch (error) {
         console.error('Error al obtener datos del trabajador:', error);
@@ -122,7 +123,6 @@ export default function TrabajadorHome() {
     };
     obtenerDatosUsuario();
   }, [router]);
-
 
   useEffect(() => {
     const fetchPublicaciones = async () => {
@@ -157,15 +157,22 @@ export default function TrabajadorHome() {
     );
   };
 
-
   return (
     <div className="flex h-screen overflow-hidden">
+      {/* Botón hamburguesa visible solo en móvil */}
+      <div className="lg:hidden fixed top-4 left-4 z-50">
+        <button onClick={() => setMenuAbierto(!menuAbierto)} className="text-3xl text-gray-700">
+          {menuAbierto ? <FaTimes /> : <FaBars />}
+        </button>
+      </div>
+
       {/* Sidebar izquierdo */}
-      <aside className="w-70 bg-white shadow-md px-6 py-8 flex flex-col items-center fixed h-screen">
+      <aside className={`bg-white shadow-md px-6 py-8 flex-col items-center fixed h-screen transition-transform duration-300 z-40
+        ${menuAbierto ? 'flex w-64' : 'hidden'} lg:flex lg:w-70`}>
         <img src="/images/logo_corto.png" alt="SkillConnect" className="h-10 mb-8" />
         <img src="/images/foto_perfil.png" alt="Perfil" className="w-30 h-30 rounded-full border-4 border-white shadow-md mb-2 object-cover" />
-        <h2 className="text-2xl font-bold">{nombre || 'Nombre del trabajador'}</h2>
-        <p className="text-sm text-gray-600">{email || 'correo@ejemplo.com'}</p>
+        <h2 className="text-2xl font-bold text-center">{nombre || 'Nombre del trabajador'}</h2>
+        <p className="text-sm text-gray-600 text-center">{email || 'correo@ejemplo.com'}</p>
         <div className="flex gap-4 text-center mb-6">
           <div><p className="font-bold text-x">{publicaciones.length}</p><span className="text-sm text-gray-600">Publicaciones</span></div>
           <div><p className="font-bold text-x">4.8</p><span className="text-sm text-gray-600">Calificación</span></div>
@@ -181,6 +188,7 @@ export default function TrabajadorHome() {
           <a href="#" className="flex items-center gap-2 text-red-500"><FaSignOutAlt /> Salir</a>
         </nav>
       </aside>
+
 
       {/* Panel derecho - Sugerencias */}
       <aside className="w-70 bg-white px-4 py-6 fixed right-0 top-0 h-screen overflow-y-auto hidden lg:block">
@@ -202,9 +210,11 @@ export default function TrabajadorHome() {
       </aside>
 
       {/* Main content */}
-      <main className="ml-64 mr-72 flex-1 overflow-y-auto bg-gray-50 scrollbar-hide">
+      <main className="flex-1 overflow-y-auto bg-gray-50 scrollbar-hide mt-16 px-4 lg:ml-64 lg:mr-72">
         <div className="p-8">
-          <div className="w-1/2 relative mb-6 gap-4">
+
+          {/* Buscador */}
+          <div className="relative mb-6 w-full sm:w-3/4 md:w-1/2 mx-auto">
             <span className="absolute left-4 top-2.5 text-gray-400">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 1110.5 3a7.5 7.5 0 016.15 13.65z" />
@@ -218,10 +228,12 @@ export default function TrabajadorHome() {
           </div>
 
           <section className="transition-all duration-300">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-2xl font-bold text-gray-800 mb-2">Tus Publicaciones</h2>
+
+            {/* Título y botón */}
+            <div className="flex flex-col sm:flex-row sm:justify-between items-start sm:items-center gap-3 mb-6">
+              <h2 className="text-xl sm:text-2xl font-bold text-gray-800">Tus Publicaciones</h2>
               <Link href="/dashboard/trabajador/publicaciones/crear">
-                <button className="bg-gradient-to-r from-purple-400 to-blue-400 text-white px-4 py-2 rounded-full text-sm">
+                <button className="bg-gradient-to-r from-purple-400 to-blue-400 text-white px-4 py-2 rounded-full text-sm shadow-md hover:shadow-lg transition">
                   + Nueva publicación
                 </button>
               </Link>
@@ -229,55 +241,71 @@ export default function TrabajadorHome() {
             {publicaciones.map((pub: any) => {
               const likeState = likes.find((l: any) => l.id === pub._id);
               return (
-                <div key={pub._id} className="bg-white shadow-md max-w-2xl mx-auto mb-6">
-                  <div className="flex items-center gap-3 px-4 py-3 justify-between">
+                <div
+                  key={pub._id}
+                  className="bg-white shadow-md rounded-lg p-4 mb-6 max-w-2xl mx-auto"
+                >
+                  {/* Header del usuario */}
+                  <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center gap-3">
-                      <img src="/images/foto_perfil.png" className="w-10 h-10 rounded-full object-cover" alt="usuario" />
+                      <img
+                        src="/images/foto_perfil.png"
+                        className="w-10 h-10 rounded-full object-cover"
+                        alt="usuario"
+                      />
                       <span className="font-semibold text-sm text-gray-800">Tú</span>
                     </div>
                     <MenuOpciones
                       id={pub._id}
                       onEliminar={() => {
                         setMensaje('✅ Publicación eliminada');
-                        setPublicaciones((prev) =>
-                          prev.filter((p) => p._id !== pub._id)
-                        );
+                        setPublicaciones((prev) => prev.filter((p) => p._id !== pub._id));
                         setTimeout(() => setMensaje(''), 3000);
                       }}
                     />
                   </div>
 
+                  {/* Imagen principal */}
                   <img src={pub.imagen} alt="Publicación" className="w-full object-cover" />
 
-                  <div className="px-4 pt-3 pb-4">
-                    <h3 className="text-xl font-bold text-gray-800 mb-1">{pub.titulo}</h3>
-                    <p className="text-sm text-gray-600 mb-2">{pub.descripcion}</p>
+                  {/* Título y descripción */}
+                  <h3 className="text-lg font-bold text-gray-800 mb-1">{pub.titulo}</h3>
+                  <p className="text-sm text-gray-600 mb-3">{pub.descripcion}</p>
 
-                    <div className="grid grid-cols-2 gap-2 text-sm text-gray-700 mb-2">
-                      <p><strong>Precio:</strong> ${pub.precio}</p>
-                      <p><strong>Categoría:</strong> {pub.categoria}</p>
-                      <p><strong>Disponible:</strong> {pub.disponibilidad}</p>
-                      <p><strong>Fecha:</strong> {pub.fecha}</p>
-                    </div>
+                  {/* Datos clave */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm text-gray-700 mb-3">
+                    <p><strong>Precio:</strong> ${pub.precio}</p>
+                    <p><strong>Categoría:</strong> {pub.categoria}</p>
+                    <p><strong>Disponible:</strong> {pub.disponibilidad}</p>
+                    <p><strong>Fecha:</strong> {pub.fecha}</p>
+                  </div>
 
-                    <div className="flex justify-between items-center text-sm text-gray-600">
-                      <button onClick={() => toggleLike(pub._id)} className={`flex items-center gap-1 ${likeState?.liked ? 'text-red-500' : 'text-gray-800'}`}>
-                        {likeState?.liked ? <FaHeart /> : <FaRegHeart />}
-                        <span>{likeState?.total}</span>
-                      </button>
+                  {/* Interacciones */}
+                  <div className="flex justify-between items-center text-sm text-gray-600">
+                    <button
+                      onClick={() => toggleLike(pub._id)}
+                      className={`flex items-center gap-1 ${likeState?.liked ? 'text-red-500' : 'text-gray-800'}`}
+                    >
+                      {likeState?.liked ? <FaHeart /> : <FaRegHeart />}
+                      <span>{likeState?.total}</span>
+                    </button>
 
-                      <span className="flex items-center gap-1 text-gray-800">
-                        <FaRegComment /> {pub.comments || 0}
-                      </span>
+                    <span className="flex items-center gap-1 text-gray-800">
+                      <FaRegComment /> {pub.comments || 0}
+                    </span>
 
-                      <button onClick={() => toggleGuardar(pub._id)}>
-                        {guardados.includes(pub._id) ? <FaBookmark className="text-yellow-400" /> : <FaRegBookmark />}
-                      </button>
-                    </div>
+                    <button onClick={() => toggleGuardar(pub._id)}>
+                      {guardados.includes(pub._id) ? (
+                        <FaBookmark className="text-yellow-400" />
+                      ) : (
+                        <FaRegBookmark />
+                      )}
+                    </button>
                   </div>
                 </div>
               );
             })}
+
           </section>
         </div>
       </main>

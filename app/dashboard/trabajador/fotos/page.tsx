@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import {
   FaHeart, FaRegHeart, FaHome, FaGlobe, FaCog,
-  FaEnvelope, FaBell, FaSignOutAlt, FaImages
+  FaEnvelope, FaBell, FaSignOutAlt, FaImages, FaBars, FaTimes
 } from 'react-icons/fa';
 import { HiOutlineChatBubbleOvalLeft } from 'react-icons/hi2';
 import { useRouter } from 'next/navigation';
@@ -13,38 +13,38 @@ const FotosTrabajador: React.FC = () => {
   const [email, setEmail] = useState('');
   const [publicaciones, setPublicaciones] = useState<any[]>([]);
   const [likes, setLikes] = useState<any[]>([]);
+  const [menuAbierto, setMenuAbierto] = useState(false);
 
-useEffect(() => {
-  const obtenerUsuario = async () => {
-    try {
-      const res = await fetch('/api/auth/userinfo');
+  useEffect(() => {
+    const obtenerUsuario = async () => {
+      try {
+        const res = await fetch('/api/auth/userinfo');
+        const data = await res.json();
+        setNombre(data.usuario?.nombre || '');
+        setEmail(data.usuario?.email || '');
+      } catch (err) {
+        console.error('Error al obtener usuario', err);
+        router.push('/login');
+      }
+    };
+
+    const obtenerPublicaciones = async () => {
+      const token = localStorage.getItem('token');
+      const res = await fetch('/api/publicaciones/mias', {
+        headers: { Authorization: `Bearer ${token}` }
+      });
       const data = await res.json();
-      setNombre(data.usuario?.nombre || '');
-      setEmail(data.usuario?.email || '');
-    } catch (err) {
-      console.error('Error al obtener usuario', err);
-      router.push('/login');
-    }
-  };
+      setPublicaciones(data);
+      setLikes(data.map((p: any) => ({
+        id: p._id,
+        liked: false,
+        total: p.likes || 0,
+      })));
+    };
 
-  const obtenerPublicaciones = async () => {
-    const token = localStorage.getItem('token');
-    const res = await fetch('/api/publicaciones/mias', {
-      headers: { Authorization: `Bearer ${token}` }
-    });
-    const data = await res.json();
-    setPublicaciones(data);
-    setLikes(data.map((p: any) => ({
-      id: p._id,
-      liked: false,
-      total: p.likes || 0,
-    })));
-  };
-
-  obtenerUsuario();
-  obtenerPublicaciones();
-}, [router]);
-
+    obtenerUsuario();
+    obtenerPublicaciones();
+  }, [router]);
 
   const toggleLike = (id: string) => {
     setLikes((prev) =>
@@ -58,8 +58,16 @@ useEffect(() => {
 
   return (
     <div className="flex flex-col lg:flex-row min-h-screen bg-gray-50">
+      {/* Botón hamburguesa */}
+      <div className="lg:hidden fixed top-4 left-4 z-50">
+        <button onClick={() => setMenuAbierto(!menuAbierto)} className="text-3xl text-gray-700">
+          {menuAbierto ? <FaTimes /> : <FaBars />}
+        </button>
+      </div>
+
       {/* Sidebar izquierdo */}
-      <aside className="hidden lg:flex w-64 bg-white shadow-md px-6 py-8 flex-col items-center fixed h-full">
+      <aside className={`bg-white shadow-md px-6 py-8 flex-col items-center fixed h-full transition-transform duration-300 z-40
+        ${menuAbierto ? 'flex w-64' : 'hidden'} lg:flex lg:w-64`}>
         <img src="/images/logo_corto.png" alt="SkillConnect" className="h-10 mb-8" />
         <img src="/images/foto_perfil.png" alt="Perfil" className="w-24 h-24 rounded-full border-4 border-white shadow-md mb-2 object-cover" />
         <h2 className="text-xl font-bold text-center">{nombre || 'Nombre del trabajador'}</h2>
@@ -81,7 +89,7 @@ useEffect(() => {
       </aside>
 
       {/* Contenido principal */}
-      <main className="w-full lg:ml-64 px-4 sm:px-6 py-6">
+      <main className="w-full mt-16 px-4 sm:px-6 py-6 lg:ml-64">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
           <div className="w-full sm:w-1/2 relative">
             <span className="absolute left-4 top-2.5 text-gray-400">
@@ -97,13 +105,13 @@ useEffect(() => {
           </div>
           <button
             onClick={() => router.push('/dashboard/trabajador/publicaciones/crear')}
-            className="bg-gradient-to-r from-purple-400 to-blue-400 text-white px-4 py-2 rounded-full text-sm"
+            className="bg-gradient-to-r from-purple-400 to-blue-400 text-white px-4 py-2 rounded-full text-sm shadow-md hover:shadow-lg"
           >
             + Nueva publicación
           </button>
         </div>
 
-        <h2 className="text-2xl font-bold text-gray-800 mb-4">Tus Fotos</h2>
+        <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-4">Tus Fotos</h2>
 
         <div className="columns-1 sm:columns-2 md:columns-3 gap-4 space-y-4">
           {publicaciones.map((pub) => {

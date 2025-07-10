@@ -10,7 +10,8 @@ import {
   FaImage,
   FaInfoCircle,
   FaVideo,
-  FaPhone
+  FaPhone,
+  FaArrowLeft,
 } from "react-icons/fa";
 
 const mockChats = [
@@ -43,6 +44,7 @@ function formatFecha(fechaISO: string) {
 export default function MensajesPage() {
   const [selectedChat, setSelectedChat] = useState(mockChats[0]);
   const [input, setInput] = useState("");
+  const [menuAbierto, setMenuAbierto] = useState(false);
 
   const enviarMensaje = () => {
     if (!input.trim()) return;
@@ -62,9 +64,23 @@ export default function MensajesPage() {
 
   return (
     <div className="flex flex-col lg:flex-row h-screen bg-white">
+
       {/* Lista de chats */}
-      <aside className="w-full lg:w-80 border-b lg:border-b-0 lg:border-r border-gray-200 p-4 overflow-y-auto">
-        <h2 className="text-lg font-bold mb-4 text-gray-700">Mensajes</h2>
+      <aside
+        className={`bg-white w-64 lg:w-80 border-r border-gray-200 p-4 overflow-y-auto z-40 fixed h-full transition-transform duration-300
+        ${menuAbierto ? 'block' : 'hidden'} lg:block`}
+      >
+        <h2 className="text-lg font-bold mb-4 text-gray-700 flex items-center gap-2">
+          <a
+            href="/dashboard/trabajador"
+            className="text-blue-500 hover:text-blue-700 text-base"
+            title="Volver al inicio"
+          >
+            <FaArrowLeft />
+          </a>
+          Mensajes
+        </h2>
+
         <div className="relative mb-4">
           <FaSearch className="absolute left-3 top-2.5 text-gray-400" />
           <input
@@ -77,10 +93,12 @@ export default function MensajesPage() {
         {mockChats.map((chat) => (
           <div
             key={chat.id}
-            onClick={() => setSelectedChat(chat)}
-            className={`flex items-center gap-3 p-3 rounded-lg cursor-pointer hover:bg-gray-100 transition ${
-              selectedChat.id === chat.id ? "bg-gray-100" : ""
-            }`}
+            onClick={() => {
+              setSelectedChat(chat);
+              setMenuAbierto(false);
+            }}
+            className={`flex items-center gap-3 p-3 rounded-lg cursor-pointer hover:bg-gray-100 transition ${selectedChat.id === chat.id ? "bg-gray-100" : ""
+              }`}
           >
             <img src={chat.avatar} className="w-10 h-10 rounded-full object-cover" />
             <div className="flex-1">
@@ -95,10 +113,19 @@ export default function MensajesPage() {
       </aside>
 
       {/* Chat activo */}
-      <section className="flex-1 flex flex-col h-full">
+      <section className="flex-1 flex flex-col h-full lg:ml-80">
         {/* Encabezado */}
         <div className="flex items-center justify-between px-4 sm:px-6 py-4 border-b border-gray-200">
           <div className="flex items-center gap-4">
+
+            {/* Flecha de regreso */}
+            <a
+              href="/dashboard/trabajador"
+              className="text-blue-500 hover:text-blue-700 text-xl block lg:hidden"
+              title="Volver al inicio"
+            >
+              <FaArrowLeft />
+            </a>
             <img
               src={selectedChat.avatar}
               className="w-10 h-10 rounded-full object-cover"
@@ -130,11 +157,10 @@ export default function MensajesPage() {
                   </div>
                 )}
                 <div
-                  className={`max-w-[80%] sm:max-w-xs px-4 py-2 rounded-xl shadow text-sm ${
-                    msg.from === "me"
-                      ? "bg-blue-500 text-white self-end ml-auto"
-                      : "bg-gray-200 text-gray-800 self-start"
-                  }`}
+                  className={`max-w-[80%] sm:max-w-xs px-4 py-2 rounded-xl shadow text-sm ${msg.from === "me"
+                    ? "bg-blue-500 text-white self-end ml-auto"
+                    : "bg-gray-200 text-gray-800 self-start"
+                    }`}
                 >
                   {msg.text}
                 </div>
