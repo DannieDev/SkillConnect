@@ -33,18 +33,26 @@ export async function POST(req: Request) {
 
     const [fields, files] = await parseForm(req, req.headers);
 
+    const titulo = fields.titulo?.[0];
     const descripcion = fields.descripcion?.[0];
+    const precio = fields.precio?.[0];
+    const disponibilidad = fields.disponibilidad?.[0];
+    const fecha = fields.fecha?.[0];
     const categoria = fields.categoria?.[0] || 'general';
     const file = files.imagen?.[0];
 
-    if (!descripcion || !file) {
+    if (!titulo || !descripcion || !precio || !disponibilidad || !fecha || !file) {
       return NextResponse.json({ error: 'Faltan campos obligatorios' }, { status: 400 });
     }
 
     const subida = await subirImagen(file.filepath, userId);
-
     const nueva = await crearPublicacion({
+
+      titulo,
       descripcion,
+      precio,
+      disponibilidad,
+      fecha,
       categoria,
       imagen: subida.secure_url,
       trabajadorId: userId,

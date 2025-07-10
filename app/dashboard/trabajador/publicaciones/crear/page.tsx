@@ -6,8 +6,12 @@ import axios from 'axios';
 
 export default function CrearPublicacionPage() {
   const router = useRouter();
+  const [titulo, setTitulo] = useState('');
+  const [precio, setPrecio] = useState('');
+  const [disponibilidad, setDisponibilidad] = useState('');
+  const [fecha, setFecha] = useState('');
   const [descripcion, setDescripcion] = useState('');
-  const [categoria, setCategoria] = useState('limpieza');
+  const [categoria, setCategoria] = useState('');
   const [imagen, setImagen] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [mensaje, setMensaje] = useState('');
@@ -28,13 +32,16 @@ export default function CrearPublicacionPage() {
     setMensaje('');
     setError('');
 
-    if (!descripcion || !imagen) {
+    if (!titulo || !descripcion || !precio || !disponibilidad || !fecha || !categoria || !imagen) {
       setError('Todos los campos son obligatorios');
       return;
     }
 
     const formData = new FormData();
-    formData.append('titulo', 'Publicación rápida');
+    formData.append('titulo', titulo);
+    formData.append('precio', precio);
+    formData.append('disponibilidad', disponibilidad);
+    formData.append('fecha', fecha);
     formData.append('descripcion', descripcion);
     formData.append('categoria', categoria);
     formData.append('imagen', imagen);
@@ -62,12 +69,43 @@ export default function CrearPublicacionPage() {
         {mensaje && <p className="text-green-600 text-center mb-4">{mensaje}</p>}
 
         <form onSubmit={handleSubmit} className="space-y-6">
+          <input
+            type="text"
+            placeholder="Título del servicio"
+            className="w-full border border-gray-300 rounded-md px-3 py-2"
+            value={titulo}
+            onChange={(e) => setTitulo(e.target.value)}
+          />
+
           <textarea
-            rows={4}
+            rows={3}
             placeholder="Descripción del servicio"
-            className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+            className="w-full border border-gray-300 rounded-md px-3 py-2"
             value={descripcion}
             onChange={(e) => setDescripcion(e.target.value)}
+          />
+
+          <input
+            type="number"
+            placeholder="Precio"
+            className="w-full border border-gray-300 rounded-md px-3 py-2"
+            value={precio}
+            onChange={(e) => setPrecio(e.target.value)}
+          />
+
+          <input
+            type="text"
+            placeholder="Disponibilidad (Ej: Mañana)"
+            className="w-full border border-gray-300 rounded-md px-3 py-2"
+            value={disponibilidad}
+            onChange={(e) => setDisponibilidad(e.target.value)}
+          />
+
+          <input
+            type="date"
+            className="w-full border border-gray-300 rounded-md px-3 py-2"
+            value={fecha}
+            onChange={(e) => setFecha(e.target.value)}
           />
 
           <select
@@ -75,10 +113,10 @@ export default function CrearPublicacionPage() {
             onChange={(e) => setCategoria(e.target.value)}
             className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
           >
-            <option value="limpieza">Limpieza</option>
-            <option value="electricidad">Electricidad</option>
-            <option value="jardinería">Jardinería</option>
-            <option value="plomería">Plomería</option>
+            <option value="Limpieza">Limpieza</option>
+            <option value="Electricidad">Electricidad</option>
+            <option value="Jardinería">Jardinería</option>
+            <option value="Plomería">Plomería</option>
           </select>
 
           <div className="mb-6">

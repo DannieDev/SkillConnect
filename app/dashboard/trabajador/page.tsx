@@ -248,34 +248,36 @@ export default function TrabajadorHome() {
 
                   <img src={pub.imagen} alt="Publicación" className="w-full object-cover" />
 
-                  <div className="px-4 pt-2 text-sm text-gray-800 space-y-1">
-                    <p>Les gusta a <span className="font-semibold">alguien</span> y otras personas</p>
-                    <p className="leading-snug">
-                      <span className="font-semibold">Tú</span>{' '}
-                      <span>{pub.descripcion.length > 70 ? pub.descripcion.slice(0, 70) + '...' : pub.descripcion}</span>
-                    </p>
-                    <button className="text-gray-500 hover:underline text-sm">Ver los {pub.comments || 0} comentarios</button>
-                    <div className="text-gray-400 text-sm">Agrega un comentario...</div>
-                  </div>
+                  <div className="px-4 pt-3 pb-4">
+                    <h3 className="text-xl font-bold text-gray-800 mb-1">{pub.titulo}</h3>
+                    <p className="text-sm text-gray-600 mb-2">{pub.descripcion}</p>
 
-                  <div className="flex justify-between items-center px-4 py-3 text-gray-600 text-sm">
-                    <div className="flex gap-4 items-center">
-                      <button onClick={() => toggleLike(pub._id)} className={`flex items-center gap-1 transition-transform hover:scale-105 ${likeState?.liked ? 'text-red-500' : 'text-gray-800'}`}>
-                        {likeState?.liked ? <FaHeart className="text-xl" /> : <FaRegHeart className="text-xl" />}
+                    <div className="grid grid-cols-2 gap-2 text-sm text-gray-700 mb-2">
+                      <p><strong>Precio:</strong> ${pub.precio}</p>
+                      <p><strong>Categoría:</strong> {pub.categoria}</p>
+                      <p><strong>Disponible:</strong> {pub.disponibilidad}</p>
+                      <p><strong>Fecha:</strong> {pub.fecha}</p>
+                    </div>
+
+                    <div className="flex justify-between items-center text-sm text-gray-600">
+                      <button onClick={() => toggleLike(pub._id)} className={`flex items-center gap-1 ${likeState?.liked ? 'text-red-500' : 'text-gray-800'}`}>
+                        {likeState?.liked ? <FaHeart /> : <FaRegHeart />}
                         <span>{likeState?.total}</span>
                       </button>
-                      <span className="flex items-center gap-1 text-gray-800"><FaRegComment className="text-xl" />{pub.comments || 0}</span>
+
+                      <span className="flex items-center gap-1 text-gray-800">
+                        <FaRegComment /> {pub.comments || 0}
+                      </span>
+
+                      <button onClick={() => toggleGuardar(pub._id)}>
+                        {guardados.includes(pub._id) ? <FaBookmark className="text-yellow-400" /> : <FaRegBookmark />}
+                      </button>
                     </div>
-                    <button onClick={() => toggleGuardar(pub._id)}>
-                      {guardados.includes(pub._id)
-                        ? <FaBookmark className="text-yellow-400 text-xl" />
-                        : <FaRegBookmark className="text-black text-xl" />}
-                    </button>
                   </div>
                 </div>
               );
             })}
-          </section>
+                </section>
         </div>
       </main>
       {/* Botón flotante para mensajes */}

@@ -4,8 +4,12 @@ import { useEffect, useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 
 export default function EditarPublicacionPage() {
+  const [titulo, setTitulo] = useState('');
   const [descripcion, setDescripcion] = useState('');
   const [categoria, setCategoria] = useState('');
+  const [precio, setPrecio] = useState('');
+  const [disponibilidad, setDisponibilidad] = useState('');
+  const [fecha, setFecha] = useState('');
   const [imagenURL, setImagenURL] = useState('');
   const [nuevaImagen, setNuevaImagen] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
@@ -24,8 +28,12 @@ export default function EditarPublicacionPage() {
       });
       const data = await res.json();
 
+      setTitulo(data.titulo);
       setDescripcion(data.descripcion);
       setCategoria(data.categoria);
+      setPrecio(data.precio);
+      setDisponibilidad(data.disponibilidad);
+      setFecha(data.fecha);
       setImagenURL(data.imagen);
       setPreview(data.imagen);
     };
@@ -50,22 +58,12 @@ export default function EditarPublicacionPage() {
       const token = localStorage.getItem('token');
       const res = await fetch('/api/upload', {
         method: 'POST',
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { Authorization: `Bearer ${token}` },
         body: formData,
       });
 
-      if (!res.ok) {
-        throw new Error(`Error al subir la imagen: ${res.status}`);
-      }
-
       const data = await res.json();
-      if (!data.secure_url) {
-        throw new Error('No se recibió URL segura');
-      }
-
-      return data.secure_url;
+      return data.secure_url || null;
     } catch (err) {
       console.error('❌ Error subiendo imagen:', err);
       return null;
@@ -79,7 +77,6 @@ export default function EditarPublicacionPage() {
 
     try {
       let urlImagen = imagenURL;
-
       if (nuevaImagen) {
         const subida = await subirImagen(nuevaImagen);
         if (!subida) throw new Error('No se pudo subir la nueva imagen');
@@ -93,12 +90,20 @@ export default function EditarPublicacionPage() {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ descripcion, categoria, imagen: urlImagen }),
+        body: JSON.stringify({
+          titulo,
+          descripcion,
+          precio,
+          disponibilidad,
+          fecha,
+          categoria,
+          imagen: urlImagen,
+        }),
       });
 
-      const data = await res.json();
       if (!res.ok) {
-        throw new Error(data.error || 'Error al actualizar');
+        const errData = await res.json();
+        throw new Error(errData.error || 'Error al actualizar');
       }
 
       setMensaje('✅ Publicación actualizada');
@@ -116,6 +121,13 @@ export default function EditarPublicacionPage() {
       {mensaje && <p className="text-green-600">{mensaje}</p>}
 
       <form onSubmit={handleSubmit} className="space-y-5">
+        <input
+          type="text"
+          placeholder="Título"
+          className="w-full border p-3 rounded-md"
+          value={titulo}
+          onChange={(e) => setTitulo(e.target.value)}
+        />
 
         <textarea
           placeholder="Descripción"
@@ -126,19 +138,41 @@ export default function EditarPublicacionPage() {
           required
         />
 
+        <input
+          type="number"
+          placeholder="Precio"
+          className="w-full border p-3 rounded-md"
+          value={precio}
+          onChange={(e) => setPrecio(e.target.value)}
+        />
+
+        <input
+          type="text"
+          placeholder="Disponibilidad (Ej: Mañana)"
+          className="w-full border p-3 rounded-md"
+          value={disponibilidad}
+          onChange={(e) => setDisponibilidad(e.target.value)}
+        />
+
+        <input
+          type="date"
+          className="w-full border p-3 rounded-md"
+          value={fecha}
+          onChange={(e) => setFecha(e.target.value)}
+        />
+
         <select
           value={categoria}
           onChange={(e) => setCategoria(e.target.value)}
           className="w-full border p-3 rounded-md bg-white"
         >
           <option value="">Selecciona una categoría</option>
-          <option value="electricidad">Electricidad</option>
-          <option value="jardinería">Jardinería</option>
-          <option value="limpieza">Limpieza</option>
-          <option value="plomería">Plomería</option>
+          <option value="Electricidad">Electricidad</option>
+          <option value="Jardinería">Jardinería</option>
+          <option value="Limpieza">Limpieza</option>
+          <option value="Plomería">Plomería</option>
         </select>
 
-        {/* Imagen actual o vista previa */}
         {preview && (
           <img
             src={preview}
@@ -147,15 +181,12 @@ export default function EditarPublicacionPage() {
           />
         )}
 
-        {/* Input de archivo */}
-        <div>
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleFileChange}
-            className="block w-full text-sm text-gray-700 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-gradient-to-r file:from-purple-500 file:to-blue-500 file:text-white hover:file:from-purple-600 hover:file:to-blue-600"
-          />
-        </div>
+        <input
+          type="file"
+          accept="image/*"
+          onChange={handleFileChange}
+          className="block w-full text-sm text-gray-700 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-gradient-to-r file:from-purple-500 file:to-blue-500 file:text-white hover:file:from-purple-600 hover:file:to-blue-600"
+        />
 
         <button
           type="submit"
