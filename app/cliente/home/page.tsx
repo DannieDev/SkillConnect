@@ -1,34 +1,18 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import {
-  FaHome,
-  FaGlobe,
-  FaCog,
-  FaEnvelope,
-  FaBell,
-  FaSignOutAlt
+  FaSignOutAlt, FaHome, FaGlobe, FaCog, FaEnvelope, FaBell,
+  FaBars, FaTimes, FaUser
 } from 'react-icons/fa';
-
-const servicios = [
-  { id: 1, titulo: "Limpieza de sala", precio: 350, categoria: "Limpieza", disponibilidad: "Mañana", fecha: "2024-07-01", img: "/images/sala.png" },
-  { id: 2, titulo: "Instalación de mini split", precio: 800, categoria: "Electricidad", disponibilidad: "Tarde", fecha: "2024-07-03", img: "/images/aire-acondicionado.png" },
-  { id: 3, titulo: "Servicio de plomería", precio: 400, categoria: "Plomería", disponibilidad: "Noche", fecha: "2024-07-01", img: "/images/plomeria.png" },
-  { id: 4, titulo: "Reparación de microondas", precio: 380, categoria: "Electrodomésticos", disponibilidad: "Tarde", fecha: "2024-07-02", img: "/images/reparando-microondas.png" },
-  { id: 5, titulo: "Ensamble de muebles", precio: 320, categoria: "Mantenimiento", disponibilidad: "Mañana", fecha: "2024-07-04", img: "/images/tecnico.png" },
-  { id: 6, titulo: "Revisión instalación eléctrica", precio: 450, categoria: "Electricidad", disponibilidad: "Mañana", fecha: "2024-07-05", img: "/images/instalacion.png" },
-  { id: 7, titulo: "Mantenimiento de jardín", precio: 300, categoria: "Jardinería", disponibilidad: "Tarde", fecha: "2024-07-06", img: "/images/jardinero.png" },
-  { id: 8, titulo: "Limpieza corporativa", precio: 550, categoria: "Limpieza", disponibilidad: "Noche", fecha: "2024-07-07", img: "/images/persona-limpiando.png" }
-];
+import Link from 'next/link';
 
 export default function ClienteHome() {
-  const [busqueda, setBusqueda] = useState('');
-  const [categoriaFiltro, setCategoriaFiltro] = useState('');
-  const [disponibilidadFiltro, setDisponibilidadFiltro] = useState('');
-  const [fechaFiltro, setFechaFiltro] = useState('');
-  const [usuario, setUsuario] = useState<{ nombre: string, email: string } | null>(null);
+  const router = useRouter();
+  const [menuAbierto, setMenuAbierto] = useState(false);
+  const [usuario, setUsuario] = useState({ nombre: 'Cargando...', email: '' });
 
   useEffect(() => {
     const obtenerUsuario = async () => {
@@ -42,66 +26,95 @@ export default function ClienteHome() {
     obtenerUsuario();
   }, []);
 
+  const servicios = [
+    { id: 1, titulo: 'Limpieza de sala', precio: 350, categoria: 'Limpieza', disponibilidad: 'Mañana', fecha: '2024-07-01', img: '/images/sala.png' },
+    { id: 2, titulo: 'Instalación de mini split', precio: 800, categoria: 'Electricidad', disponibilidad: 'Tarde', fecha: '2024-07-03', img: '/images/aire-acondicionado.png' },
+    { id: 3, titulo: 'Servicio de plomería', precio: 400, categoria: 'Plomería', disponibilidad: 'Noche', fecha: '2024-07-01', img: '/images/plomeria.png' },
+    { id: 4, titulo: 'Reparación de microondas', precio: 380, categoria: 'Electrodomésticos', disponibilidad: 'Tarde', fecha: '2024-07-02', img: '/images/reparando-microondas.png' },
+    { id: 5, titulo: 'Ensamble de muebles', precio: 320, categoria: 'Mantenimiento', disponibilidad: 'Mañana', fecha: '2024-07-04', img: '/images/tecnico.png' },
+    { id: 6, titulo: 'Revisión instalación eléctrica', precio: 450, categoria: 'Electricidad', disponibilidad: 'Mañana', fecha: '2024-07-05', img: '/images/instalacion.png' },
+    { id: 7, titulo: 'Mantenimiento de jardín', precio: 300, categoria: 'Jardinería', disponibilidad: 'Tarde', fecha: '2024-07-06', img: '/images/jardinero.png' },
+    { id: 8, titulo: 'Limpieza corporativa', precio: 550, categoria: 'Limpieza', disponibilidad: 'Noche', fecha: '2024-07-07', img: '/images/persona-limpiando.png' }
+  ];
+
+  const [filtros, setFiltros] = useState({ busqueda: '', categoria: '', disponibilidad: '', fecha: '' });
+
   const serviciosFiltrados = servicios.filter((s) => {
-    const coincideBusqueda =
-      s.titulo.toLowerCase().includes(busqueda.toLowerCase()) ||
-      s.categoria.toLowerCase().includes(busqueda.toLowerCase());
-
-    const coincideCategoria = categoriaFiltro ? s.categoria === categoriaFiltro : true;
-    const coincideDisponibilidad = disponibilidadFiltro ? s.disponibilidad === disponibilidadFiltro : true;
-    const coincideFecha = fechaFiltro ? s.fecha === fechaFiltro : true;
-
-    return coincideBusqueda && coincideCategoria && coincideDisponibilidad && coincideFecha;
+    const b = filtros.busqueda.toLowerCase();
+    return (
+      (s.titulo.toLowerCase().includes(b) || s.categoria.toLowerCase().includes(b)) &&
+      (!filtros.categoria || s.categoria === filtros.categoria) &&
+      (!filtros.disponibilidad || s.disponibilidad === filtros.disponibilidad) &&
+      (!filtros.fecha || s.fecha === filtros.fecha)
+    );
   });
 
   return (
-    <div className="flex flex-col md:flex-row h-screen overflow-hidden font-sans">
-      {/* Sidebar */}
-        <aside className="hidden md:flex w-full md:w-64 bg-white shadow-lg flex-col items-center justify-center py-8">
-        <img src="/images/logo.png" alt="Logo" className="w-40 mb-6" />
-          <nav className="flex flex-col gap-6 text-sm w-full px-6 items-center">
-          <a href="#" className="flex items-center gap-2 text-gray-700 hover:text-blue-600"><FaHome className="text-lg" /> Inicio</a>
-          <a href="#" className="flex items-center gap-2 text-gray-700 hover:text-blue-600"><FaGlobe className="text-lg" /> Explora</a>
-          <a href="#" className="flex items-center gap-2 text-gray-700 hover:text-blue-600"><FaCog className="text-lg" /> Ajustes</a>
-          <a href="#" className="flex items-center gap-2 text-gray-700 hover:text-blue-600"><FaEnvelope className="text-lg" /> Mensajes</a>
-          <a href="#" className="flex items-center gap-2 text-gray-700 hover:text-blue-600"><FaBell className="text-lg" /> Notificaciones</a>
-          <a href="#" className="flex items-center gap-2 text-red-600 hover:text-red-800 mt-2"><FaSignOutAlt className="text-lg" /> Salir</a>
-        </nav>
-        <div className="mt-auto w-full px-6 border-t pt-4">
-          <div className="flex items-center gap-3">
-            <img src="/images/user.jpg" alt="Usuario" className="w-10 h-10 rounded-full object-cover" />
-            <div className="text-sm">
-              <p className="font-semibold text-gray-900">{usuario?.nombre ?? 'Cargando...'}</p>
-              <p className="text-gray-500 text-xs">{usuario?.email ?? ''}</p>
-            </div>
-          </div>
-          <div className="mt-2">
-            <Link href="/dashboard/cliente/perfil" className="text-blue-600 text-sm font-medium hover:underline">
-              👤 Ver perfil
-            </Link>
-          </div>
-        </div>
-      </aside>
+    <div className="relative min-h-screen bg-gray-50 lg:flex">
+      {/* Botón hamburguesa solo en móviles */}
+      <div className="lg:hidden fixed top-4 left-4 z-50">
+        <button onClick={() => setMenuAbierto(!menuAbierto)} className="text-3xl text-gray-700">
+          {menuAbierto ? <FaTimes /> : <FaBars />}
+        </button>
+      </div>
 
-      {/* Main content */}
-      <main className="flex-1 bg-gray-50 p-5 md:p-10 overflow-y-auto">
+      {/* Sidebar corregido */}
+     <aside className={`bg-white shadow-md fixed top-0 left-0 h-screen w-64 z-40 transform transition-transform duration-300
+  ${menuAbierto ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 lg:static`}>
+  <div className="h-full flex flex-col justify-between px-6 py-8">
+    {/* Parte superior */}
+    <div>
+      <img src="/images/logo.png" alt="SkillConnect" className="h-10 mb-8" />
+      <nav className="flex flex-col gap-4 text-sm text-gray-700">
+        <a href="#" className="flex items-center gap-2 hover:text-blue-600"><FaHome /> Inicio</a>
+        <a href="#" className="flex items-center gap-2 hover:text-blue-600"><FaGlobe /> Explora</a>
+        <a href="#" className="flex items-center gap-2 hover:text-blue-600"><FaCog /> Ajustes</a>
+        <a href="#" className="flex items-center gap-2 hover:text-blue-600"><FaEnvelope /> Mensajes</a>
+        <a href="#" className="flex items-center gap-2 hover:text-blue-600"><FaBell /> Notificaciones</a>
+        <button
+          onClick={async () => {
+            try {
+              await axios.post('/api/auth/logout');
+            } catch (err) {
+              console.error('Error al cerrar sesión', err);
+            } finally {
+              router.push('/login');
+            }
+          }}
+          className="flex items-center gap-2 text-red-600 hover:text-red-800 mt-2 text-sm"
+        >
+          <FaSignOutAlt /> Salir
+        </button>
+      </nav>
+    </div>
+
+    {/* Parte inferior - Perfil */}
+    <div className="border-t pt-4">
+      <div className="flex items-center gap-3">
+        <img src="/images/user.jpg" alt="Usuario" className="w-10 h-10 rounded-full object-cover" />
+        <div className="text-sm">
+          <p className="font-semibold text-gray-900">{usuario.nombre}</p>
+          <p className="text-gray-500 text-xs">{usuario.email}</p>
+        </div>
+      </div>
+      <div className="mt-2">
+        <Link href="/dashboard/cliente/perfil" className="text-blue-600 text-sm font-medium hover:underline">
+          <FaUser className="inline-block mr-1" /> Ver perfil
+        </Link>
+      </div>
+    </div>
+  </div>
+</aside>
+
+      {/* Contenido principal */}
+      <main className="flex-1 p-5 md:p-10 overflow-y-auto">
         <h1 className="text-2xl font-semibold mb-1">Inicio</h1>
         <p className="text-sm text-gray-500 mb-4">¡Bienvenido{usuario?.nombre ? `, ${usuario.nombre}` : ''}!</p>
 
         {/* Filtros */}
         <div className="flex flex-wrap gap-2 mb-6">
-          <input
-            type="text"
-            placeholder="Buscar servicios..."
-            className="border px-4 py-2 rounded-md text-sm w-full sm:w-auto"
-            value={busqueda}
-            onChange={(e) => setBusqueda(e.target.value)}
-          />
-          <select
-            value={categoriaFiltro}
-            onChange={(e) => setCategoriaFiltro(e.target.value)}
-            className="border px-4 py-2 rounded-md text-sm w-full sm:w-auto"
-          >
+          <input type="text" placeholder="Buscar servicios..." className="border px-4 py-2 rounded-md text-sm w-full sm:w-auto" value={filtros.busqueda} onChange={(e) => setFiltros({ ...filtros, busqueda: e.target.value })} />
+          <select value={filtros.categoria} onChange={(e) => setFiltros({ ...filtros, categoria: e.target.value })} className="border px-4 py-2 rounded-md text-sm w-full sm:w-auto">
             <option value="">Categoría</option>
             <option value="Limpieza">Limpieza</option>
             <option value="Electricidad">Electricidad</option>
@@ -110,22 +123,13 @@ export default function ClienteHome() {
             <option value="Mantenimiento">Mantenimiento</option>
             <option value="Jardinería">Jardinería</option>
           </select>
-          <select
-            value={disponibilidadFiltro}
-            onChange={(e) => setDisponibilidadFiltro(e.target.value)}
-            className="border px-4 py-2 rounded-md text-sm w-full sm:w-auto"
-          >
+          <select value={filtros.disponibilidad} onChange={(e) => setFiltros({ ...filtros, disponibilidad: e.target.value })} className="border px-4 py-2 rounded-md text-sm w-full sm:w-auto">
             <option value="">Disponibilidad</option>
             <option value="Mañana">Mañana</option>
             <option value="Tarde">Tarde</option>
             <option value="Noche">Noche</option>
           </select>
-          <input
-            type="date"
-            value={fechaFiltro}
-            onChange={(e) => setFechaFiltro(e.target.value)}
-            className="border px-4 py-2 rounded-md text-sm w-full sm:w-auto"
-          />
+          <input type="date" value={filtros.fecha} onChange={(e) => setFiltros({ ...filtros, fecha: e.target.value })} className="border px-4 py-2 rounded-md text-sm w-full sm:w-auto" />
         </div>
 
         {/* Servicios */}
