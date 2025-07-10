@@ -105,9 +105,8 @@ export default function ClienteHome() {
     </div>
   </div>
 </aside>
-
       {/* Contenido principal */}
-      <main className="flex-1 p-5 md:p-10 overflow-y-auto">
+         <main className="flex-1 p-5 md:p-10 overflow-y-auto pt-20 lg:pt-10">
         <h1 className="text-2xl font-semibold mb-1">Inicio</h1>
         <p className="text-sm text-gray-500 mb-4">¡Bienvenido{usuario?.nombre ? `, ${usuario.nombre}` : ''}!</p>
 
