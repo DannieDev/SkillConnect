@@ -32,7 +32,7 @@ function MenuOpciones({ id, onEliminar }: { id: string; onEliminar: () => void }
     if (res.ok) {
       setConfirmDelete(false);
       setOpen(false);
-      onEliminar(); // ✅ actualiza desde el padre
+      onEliminar();
     } else {
       alert('Error al eliminar publicación');
     }
@@ -113,8 +113,8 @@ export default function TrabajadorHome() {
     const obtenerDatosUsuario = async () => {
       try {
         const res = await axios.get('/api/auth/userinfo');
-        setNombre(res.data.nombre);
-        setEmail(res.data.email);
+        setNombre(res.data.usuario?.nombre || ''); // ✅ accede como .usuario.nombre
+        setEmail(res.data.usuario?.email || '');
       } catch (error) {
         console.error('Error al obtener datos del trabajador:', error);
         router.push('/login');
@@ -122,6 +122,7 @@ export default function TrabajadorHome() {
     };
     obtenerDatosUsuario();
   }, [router]);
+
 
   useEffect(() => {
     const fetchPublicaciones = async () => {
@@ -277,7 +278,7 @@ export default function TrabajadorHome() {
                 </div>
               );
             })}
-                </section>
+          </section>
         </div>
       </main>
       {/* Botón flotante para mensajes */}

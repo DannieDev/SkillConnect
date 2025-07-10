@@ -14,36 +14,37 @@ const FotosTrabajador: React.FC = () => {
   const [publicaciones, setPublicaciones] = useState<any[]>([]);
   const [likes, setLikes] = useState<any[]>([]);
 
-  useEffect(() => {
-    const obtenerUsuario = async () => {
-      try {
-        const res = await fetch('/api/auth/userinfo');
-        const data = await res.json();
-        setNombre(data.nombre);
-        setEmail(data.email);
-      } catch (err) {
-        console.error('Error al obtener usuario', err);
-        router.push('/login');
-      }
-    };
-
-    const obtenerPublicaciones = async () => {
-      const token = localStorage.getItem('token');
-      const res = await fetch('/api/publicaciones/mias', {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+useEffect(() => {
+  const obtenerUsuario = async () => {
+    try {
+      const res = await fetch('/api/auth/userinfo');
       const data = await res.json();
-      setPublicaciones(data);
-      setLikes(data.map((p: any) => ({
-        id: p._id,
-        liked: false,
-        total: p.likes || 0,
-      })));
-    };
+      setNombre(data.usuario?.nombre || '');
+      setEmail(data.usuario?.email || '');
+    } catch (err) {
+      console.error('Error al obtener usuario', err);
+      router.push('/login');
+    }
+  };
 
-    obtenerUsuario();
-    obtenerPublicaciones();
-  }, [router]);
+  const obtenerPublicaciones = async () => {
+    const token = localStorage.getItem('token');
+    const res = await fetch('/api/publicaciones/mias', {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    const data = await res.json();
+    setPublicaciones(data);
+    setLikes(data.map((p: any) => ({
+      id: p._id,
+      liked: false,
+      total: p.likes || 0,
+    })));
+  };
+
+  obtenerUsuario();
+  obtenerPublicaciones();
+}, [router]);
+
 
   const toggleLike = (id: string) => {
     setLikes((prev) =>
