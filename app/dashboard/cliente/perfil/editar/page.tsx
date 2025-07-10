@@ -9,8 +9,6 @@ export default function EditarPerfil() {
   const [cliente, setCliente] = useState({
     nombre: 'Miguel Torres',
     correo: 'miguel@example.com',
-    telefono: '5512345678',
-    direccion: 'CDMX, México',
     foto: '/images/user.jpg',
   });
 
@@ -20,9 +18,7 @@ export default function EditarPerfil() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
     try {
-      // Aquí puedes enviar la info al backend más adelante
       console.log('Datos enviados:', cliente);
       router.push('/dashboard/cliente/perfil');
     } catch (err) {
@@ -31,11 +27,16 @@ export default function EditarPerfil() {
   };
 
   return (
-    <div className="flex bg-gray-50 min-h-screen">
-      <main className="flex-1 p-10 max-w-3xl mx-auto">
-        <h1 className="text-3xl font-bold mb-6">Editar Perfil</h1>
+    <div className="flex items-center justify-center min-h-screen bg-gray-100 px-4 sm:px-6 lg:px-8">
+      <div className="w-full max-w-md space-y-8">
+        <div className="text-center">
+          <h2 className="text-3xl font-extrabold text-gray-900">Editar Perfil</h2>
+          <p className="mt-2 text-sm text-gray-600">
+            Actualiza tu información personal.
+          </p>
+        </div>
 
-        <form onSubmit={handleSubmit} className="bg-white p-6 rounded-xl shadow space-y-5">
+        <form onSubmit={handleSubmit} className="bg-white p-6 rounded-xl shadow-md space-y-5">
           <div>
             <label className="block text-sm font-medium text-gray-700">Nombre</label>
             <input
@@ -43,7 +44,7 @@ export default function EditarPerfil() {
               name="nombre"
               value={cliente.nombre}
               onChange={handleChange}
-              className="mt-1 w-full border border-gray-300 rounded px-4 py-2"
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
               required
             />
           </div>
@@ -55,30 +56,8 @@ export default function EditarPerfil() {
               name="correo"
               value={cliente.correo}
               onChange={handleChange}
-              className="mt-1 w-full border border-gray-300 rounded px-4 py-2"
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
               required
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Teléfono</label>
-            <input
-              type="tel"
-              name="telefono"
-              value={cliente.telefono}
-              onChange={handleChange}
-              className="mt-1 w-full border border-gray-300 rounded px-4 py-2"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Dirección</label>
-            <input
-              type="text"
-              name="direccion"
-              value={cliente.direccion}
-              onChange={handleChange}
-              className="mt-1 w-full border border-gray-300 rounded px-4 py-2"
             />
           </div>
 
@@ -89,18 +68,20 @@ export default function EditarPerfil() {
               name="foto"
               value={cliente.foto}
               onChange={handleChange}
-              className="mt-1 w-full border border-gray-300 rounded px-4 py-2"
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
             />
           </div>
 
-          <button
-            type="submit"
-            className="w-full py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
-          >
-            Guardar cambios
-          </button>
+          <div>
+            <button
+              type="submit"
+              className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 transition focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+            >
+              Guardar cambios
+            </button>
+          </div>
         </form>
-      </main>
+      </div>
     </div>
   );
 }

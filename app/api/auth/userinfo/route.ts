@@ -14,10 +14,12 @@ export async function GET(req: NextRequest) {
     // Verificar y decodificar el token
     const decoded: any = jwt.verify(token, process.env.JWT_SECRET!);
 
-    // Retornar directamente nombre y email para el frontend
+    // Retornar en el formato esperado por el frontend
     return NextResponse.json({
-      nombre: decoded.nombre,
-      email: decoded.email
+      usuario: {
+        nombre: decoded.nombre,
+        email: decoded.email
+      }
     });
 
   } catch (error) {

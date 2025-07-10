@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import { useState } from "react";
 import {
@@ -61,9 +61,9 @@ export default function MensajesPage() {
   let lastDate = "";
 
   return (
-    <div className="flex h-screen bg-white">
+    <div className="flex flex-col lg:flex-row h-screen bg-white">
       {/* Lista de chats */}
-      <aside className="w-80 border-r border-gray-200 p-4 overflow-y-auto">
+      <aside className="w-full lg:w-80 border-b lg:border-b-0 lg:border-r border-gray-200 p-4 overflow-y-auto">
         <h2 className="text-lg font-bold mb-4 text-gray-700">Mensajes</h2>
         <div className="relative mb-4">
           <FaSearch className="absolute left-3 top-2.5 text-gray-400" />
@@ -97,7 +97,7 @@ export default function MensajesPage() {
       {/* Chat activo */}
       <section className="flex-1 flex flex-col h-full">
         {/* Encabezado */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200">
+        <div className="flex items-center justify-between px-4 sm:px-6 py-4 border-b border-gray-200">
           <div className="flex items-center gap-4">
             <img
               src={selectedChat.avatar}
@@ -108,7 +108,7 @@ export default function MensajesPage() {
               <p className="text-xs text-gray-500">Activo ahora</p>
             </div>
           </div>
-          <div className="flex items-center gap-4 text-gray-500">
+          <div className="hidden sm:flex items-center gap-4 text-gray-500">
             <FaPhone className="cursor-pointer hover:text-gray-700" />
             <FaVideo className="cursor-pointer hover:text-gray-700" />
             <FaInfoCircle className="cursor-pointer hover:text-gray-700" />
@@ -116,7 +116,7 @@ export default function MensajesPage() {
         </div>
 
         {/* Mensajes */}
-        <div className="flex-1 px-6 py-4 overflow-y-auto bg-gray-50 space-y-4 text-sm">
+        <div className="flex-1 px-4 sm:px-6 py-4 overflow-y-auto bg-gray-50 space-y-4 text-sm">
           {selectedChat.messages.map((msg, idx) => {
             const fechaMsg = new Date(msg.date).toDateString();
             const showFecha = fechaMsg !== lastDate;
@@ -130,7 +130,7 @@ export default function MensajesPage() {
                   </div>
                 )}
                 <div
-                  className={`max-w-xs px-4 py-2 rounded-xl shadow text-sm ${
+                  className={`max-w-[80%] sm:max-w-xs px-4 py-2 rounded-xl shadow text-sm ${
                     msg.from === "me"
                       ? "bg-blue-500 text-white self-end ml-auto"
                       : "bg-gray-200 text-gray-800 self-start"
@@ -144,12 +144,11 @@ export default function MensajesPage() {
         </div>
 
         {/* Input */}
-        <div className="border-t border-gray-200 px-6 py-3 flex items-center gap-3">
+        <div className="border-t border-gray-200 px-4 sm:px-6 py-3 flex items-center gap-3">
           <FaSmile className="text-xl text-gray-500 cursor-pointer" />
           <FaImage className="text-xl text-gray-500 cursor-pointer" />
           <FaMicrophone className="text-xl text-gray-500 cursor-pointer" />
           <FaRegHeart className="text-xl text-gray-500 cursor-pointer" />
-
           <input
             value={input}
             onChange={(e) => setInput(e.target.value)}

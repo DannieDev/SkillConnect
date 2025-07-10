@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import { useState } from "react";
 import { FaBell, FaCheck } from "react-icons/fa";
@@ -50,23 +50,23 @@ export default function NotificacionesPage() {
       : notificaciones.filter((n) => !n.leido);
 
   return (
-    <div className="max-w-2xl mx-auto px-4 py-8">
-      <div className="flex justify-between items-center mb-6">
+    <div className="max-w-2xl mx-auto px-4 py-8 sm:px-6">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6">
         <h1 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
           <FaBell /> Notificaciones
         </h1>
         <button
           onClick={marcarTodasComoLeidas}
-          className="text-sm bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600"
+          className="text-sm bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 w-fit"
         >
           <FaCheck className="inline mr-1" /> Marcar todas como leídas
         </button>
       </div>
 
-      <div className="flex gap-4 mb-4 text-sm">
+      <div className="flex gap-3 mb-4 text-sm">
         <button
           onClick={() => setFiltro("todas")}
-          className={`px-3 py-1 rounded-full ${
+          className={`px-3 py-1 rounded-full transition ${
             filtro === "todas"
               ? "bg-blue-500 text-white"
               : "bg-gray-200 text-gray-700"
@@ -76,7 +76,7 @@ export default function NotificacionesPage() {
         </button>
         <button
           onClick={() => setFiltro("no-leidas")}
-          className={`px-3 py-1 rounded-full ${
+          className={`px-3 py-1 rounded-full transition ${
             filtro === "no-leidas"
               ? "bg-blue-500 text-white"
               : "bg-gray-200 text-gray-700"
@@ -94,7 +94,7 @@ export default function NotificacionesPage() {
             <div
               key={n.id}
               onClick={() => marcarComoLeida(n.id)}
-              className={`flex items-start gap-4 p-4 rounded-lg shadow-sm border cursor-pointer hover:bg-gray-50 ${
+              className={`flex items-start gap-4 p-4 rounded-lg shadow-sm border cursor-pointer hover:bg-gray-50 transition ${
                 n.leido ? "bg-white" : "bg-blue-50 border-blue-300"
               }`}
             >
@@ -104,12 +104,14 @@ export default function NotificacionesPage() {
                 alt={n.usuario}
               />
               <div className="flex-1">
-                <p className="text-gray-800">
+                <p className="text-gray-800 text-sm sm:text-base">
                   <span className="font-semibold">{n.usuario}</span> {n.mensaje}
                 </p>
                 <p className="text-xs text-gray-500 mt-1">{n.tiempo}</p>
               </div>
-              {!n.leido && <span className="w-2 h-2 rounded-full bg-blue-500 mt-2" />}
+              {!n.leido && (
+                <span className="w-2 h-2 rounded-full bg-blue-500 mt-2 shrink-0" />
+              )}
             </div>
           ))
         )}

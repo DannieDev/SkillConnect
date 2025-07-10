@@ -31,11 +31,11 @@ export default function HistorialTrabajadorPage() {
   ];
 
   return (
-    <main className="min-h-screen bg-gray-100 p-6">
+    <main className="min-h-screen bg-gray-100 px-4 sm:px-6 py-6">
       <div className="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow">
         {/* Header */}
-        <div className="flex justify-between items-center mb-4">
-          <h1 className="text-xl font-bold text-blue-900">Historial de servicios</h1>
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+          <h1 className="text-2xl font-bold text-blue-900">Historial de servicios</h1>
           <button
             onClick={() => router.back()}
             className="text-blue-600 text-sm hover:underline flex items-center"
@@ -49,7 +49,7 @@ export default function HistorialTrabajadorPage() {
           {historial.map((item) => (
             <li
               key={item.id}
-              className="p-4 bg-gray-50 border rounded-lg flex flex-col md:flex-row md:items-center md:justify-between"
+              className="p-4 bg-gray-50 border border-gray-200 rounded-lg flex flex-col md:flex-row md:justify-between md:items-center gap-4"
             >
               <div className="text-sm text-gray-700">
                 <p className="font-semibold text-gray-800">{item.servicio}</p>
@@ -57,7 +57,7 @@ export default function HistorialTrabajadorPage() {
                 <p>Fecha: {item.fecha}</p>
                 <p className="text-green-700 font-semibold mt-1">Pagado: {item.pago}</p>
               </div>
-              <div className="flex items-center mt-4 md:mt-0 text-green-600 font-medium">
+              <div className="flex items-center text-green-600 font-medium">
                 <FaCheckCircle className="mr-2" />
                 Completado
               </div>

@@ -61,8 +61,8 @@ export default function CrearPublicacionPage() {
   };
 
   return (
-    <main className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
-      <div className="bg-white shadow-lg rounded-lg p-8 w-full max-w-xl">
+    <main className="min-h-screen flex items-center justify-center bg-gray-100 px-4 sm:px-6">
+      <div className="bg-white shadow-lg rounded-lg p-6 sm:p-8 w-full max-w-xl">
         <h1 className="text-2xl font-bold text-center mb-6">Crear nueva publicación</h1>
 
         {error && <p className="text-red-600 text-center mb-4">{error}</p>}
@@ -111,7 +111,7 @@ export default function CrearPublicacionPage() {
           <select
             value={categoria}
             onChange={(e) => setCategoria(e.target.value)}
-            className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+            className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 text-sm"
           >
             <option value="Limpieza">Limpieza</option>
             <option value="Electricidad">Electricidad</option>
@@ -119,7 +119,7 @@ export default function CrearPublicacionPage() {
             <option value="Plomería">Plomería</option>
           </select>
 
-          <div className="mb-6">
+          <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">Imagen</label>
             <input
               type="file"
