@@ -11,7 +11,6 @@ import {
 
 export default function PerfilCliente() {
   const router = useRouter();
-
   const [menuAbierto, setMenuAbierto] = useState(false);
   const [cliente, setCliente] = useState({
     nombre: 'Cargando...',
@@ -38,6 +37,8 @@ export default function PerfilCliente() {
     obtenerDatos();
   }, []);
 
+  const cerrarMenu = () => setMenuAbierto(false);
+
   const serviciosRecientes = [
     {
       titulo: 'Limpieza de sala',
@@ -63,26 +64,26 @@ export default function PerfilCliente() {
       </div>
 
       {/* Sidebar */}
-      <aside className={`bg-white shadow-md px-6 py-8 flex-col items-center fixed h-screen transition-transform duration-300 z-40 ${menuAbierto ? 'flex w-64' : 'hidden'} lg:flex lg:w-64`}>
+      <aside className={`bg-white shadow-md px-6 py-8 fixed h-screen z-40 transition-transform duration-300 ${menuAbierto ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 lg:flex lg:flex-col lg:w-64`}>
         <img src="/images/logo.png" alt="SkillConnect" className="h-10 mb-8" />
-        <img src={cliente.foto} alt="Perfil" className="w-24 h-24 rounded-full object-cover border-4 border-white shadow-md mb-3" />
+        <img src={cliente.foto} alt="Perfil" className="w-24 h-24 rounded-full object-cover border-4 border-white shadow-md mb-3 mx-auto" />
         <h2 className="text-lg font-bold text-center">{cliente.nombre}</h2>
         <p className="text-sm text-gray-500 text-center">{cliente.email}</p>
 
-           <nav className="flex flex-col gap-4 text-sm text-gray-700 w-full items-start my-6">
-          <Link href="/cliente/home" className="flex items-center gap-2 hover:text-blue-600">
+        <nav className="flex flex-col gap-4 text-sm text-gray-700 w-full items-start my-6">
+          <Link href="/cliente/home" onClick={cerrarMenu} className="flex items-center gap-2 hover:text-blue-600">
             <FaHome /><span>Inicio</span>
           </Link>
-          <Link href="/dashboard/cliente/explora" className="flex items-center gap-2 hover:text-blue-600">
+          <Link href="/cliente/explora" onClick={cerrarMenu} className="flex items-center gap-2 hover:text-blue-600">
             <FaGlobe /><span>Explora</span>
           </Link>
-          <Link href="/dashboard/cliente/ajustes" className="flex items-center gap-2 hover:text-blue-600">
+          <Link href="/cliente/ajustes" onClick={cerrarMenu} className="flex items-center gap-2 hover:text-blue-600">
             <FaCog /><span>Ajustes</span>
           </Link>
-          <Link href="/dashboard/cliente/mensajes" className="flex items-center gap-2 hover:text-blue-600">
+          <Link href="/cliente/chats" onClick={cerrarMenu} className="flex items-center gap-2 hover:text-blue-600">
             <FaCommentDots /><span>Mensajes</span>
           </Link>
-          <Link href="/dashboard/cliente/notificaciones" className="flex items-center gap-2 hover:text-blue-600">
+          <Link href="/cliente/notificaciones" onClick={cerrarMenu} className="flex items-center gap-2 hover:text-blue-600">
             <FaBell /><span>Notificaciones</span>
           </Link>
         </nav>
@@ -97,7 +98,7 @@ export default function PerfilCliente() {
               router.push('/login');
             }
           }}
-className="flex items-center gap-2 text-red-600 hover:underline text-sm w-full justify-start mt-4"
+          className="flex items-center gap-2 text-red-600 hover:underline text-sm w-full justify-start mt-4"
         >
           <FaSignOutAlt />
           <span>Salir</span>
@@ -105,8 +106,8 @@ className="flex items-center gap-2 text-red-600 hover:underline text-sm w-full j
       </aside>
 
       {/* Main */}
-      <main className="flex-1 overflow-y-auto bg-gray-50 scrollbar-hide mt-16 px-4 lg:ml-64">
-        <div className="p-8">
+      <main className="flex-1 overflow-y-auto bg-gray-50 mt-16 px-4 lg:ml-64 scrollbar-hide">
+        <div className="p-6 sm:p-8">
           <h1 className="text-3xl font-bold mb-6">
             👋 ¡Hola, {cliente.nombre !== 'Cargando...' ? cliente.nombre.split(' ')[0] : 'cliente'}!
           </h1>
@@ -128,7 +129,7 @@ className="flex items-center gap-2 text-red-600 hover:underline text-sm w-full j
               </div>
             </div>
             <button
-              onClick={() => router.push('/dashboard/cliente/perfil/editar')}
+              onClick={() => router.push('/cliente/perfil/editar')}
               className="mt-6 w-full py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
             >
               Editar información
