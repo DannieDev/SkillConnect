@@ -8,12 +8,20 @@ import {
   FaBars, FaTimes, FaUser
 } from 'react-icons/fa';
 import Link from 'next/link';
+<<<<<<< HEAD
 import TarjetaServicio from '../../../components/TarjetaServicio';
+=======
+>>>>>>> 63cb45066278cbe0bd9c2974b2c03b007566cb92
 
 export default function ClienteHome() {
   const router = useRouter();
   const [menuAbierto, setMenuAbierto] = useState(false);
   const [usuario, setUsuario] = useState({ nombre: 'Cargando...', email: '' });
+<<<<<<< HEAD
+=======
+  const [trabajadores, setTrabajadores] = useState([]);
+  const [filtro, setFiltro] = useState('');
+>>>>>>> 63cb45066278cbe0bd9c2974b2c03b007566cb92
 
   useEffect(() => {
     const obtenerUsuario = async () => {
@@ -27,6 +35,7 @@ export default function ClienteHome() {
     obtenerUsuario();
   }, []);
 
+<<<<<<< HEAD
   const servicios = [
     { id: 1, titulo: 'Limpieza de sala', precio: 350, categoria: 'Limpieza', disponibilidad: 'Mañana', fecha: '2024-07-01', img: '/images/sala.png', trabajadorId: 'u001' },
     { id: 2, titulo: 'Instalación de mini split', precio: 800, categoria: 'Electricidad', disponibilidad: 'Tarde', fecha: '2024-07-03', img: '/images/aire-acondicionado.png', trabajadorId: 'u002' },
@@ -49,6 +58,22 @@ export default function ClienteHome() {
       (!filtros.fecha || s.fecha === filtros.fecha)
     );
   });
+=======
+  useEffect(() => {
+  const fetchTrabajadores = async () => {
+    const res = await fetch('/api/trabajadores');
+    const data = await res.json();
+    setTrabajadores(data); // aquí los trabajadores reales
+  };
+
+  fetchTrabajadores();
+}, []);
+
+ const trabajadoresFiltrados = trabajadores.filter((t: any) =>
+  t.nombre.toLowerCase().includes(filtro.toLowerCase()) ||
+  (t.especialidad || '').toLowerCase().includes(filtro.toLowerCase())
+);
+>>>>>>> 63cb45066278cbe0bd9c2974b2c03b007566cb92
 
   return (
     <div className="relative min-h-screen bg-gray-50 lg:flex">
@@ -109,6 +134,7 @@ export default function ClienteHome() {
         <h1 className="text-2xl font-semibold mb-1">Inicio</h1>
         <p className="text-sm text-gray-500 mb-4">¡Bienvenido{usuario?.nombre ? `, ${usuario.nombre}` : ''}!</p>
 
+<<<<<<< HEAD
         {/* Filtros */}
         <div className="flex flex-wrap gap-2 mb-6">
           <input type="text" placeholder="Buscar servicios..." className="border px-4 py-2 rounded-md text-sm w-full sm:w-auto" value={filtros.busqueda} onChange={(e) => setFiltros({ ...filtros, busqueda: e.target.value })} />
@@ -134,6 +160,48 @@ export default function ClienteHome() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {serviciosFiltrados.map((s) => (
             <TarjetaServicio key={s.id} servicio={s} />
+=======
+        {/* Filtro de búsqueda */}
+        <div className="mb-6">
+          <input
+            type="text"
+            placeholder="Buscar trabajador por nombre o profesión..."
+            className="w-full border px-4 py-2 rounded-md text-sm"
+            value={filtro}
+            onChange={(e) => setFiltro(e.target.value)}
+          />
+        </div>
+
+        {/* Tarjetas de trabajadores */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {trabajadoresFiltrados.map((trab: any) => (
+            <div key={trab._id} className="border rounded-md p-4 shadow-sm bg-white">
+              <img src={trab.avatar || '/images/user.jpg'} alt={trab.nombre} className="w-16 h-16 rounded-full mb-2" />
+              <h2 className="text-lg font-semibold">{trab.nombre}</h2>
+<p className="text-sm text-gray-600">{trab.especialidad || 'Sin especialidad'}</p>
+              <button
+                onClick={async () => {
+                  try {
+                    const clienteRes = await axios.get('/api/auth/userinfo');
+                    const clienteId = clienteRes.data.usuario._id;
+
+                    const res = await axios.post('/api/conversaciones', {
+                      usuario1: clienteId,
+                      usuario2: trab._id,
+                    });
+
+                    const conversacion = res.data;
+                    router.push(`/dashboard/cliente/chats/conversacion/${conversacion._id}`); // ✅ Esta es la ruta correcta
+                  } catch (error) {
+                    console.error('Error al crear conversación', error);
+                  }
+                }}
+                className="mt-3 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+              >
+                Enviar mensaje
+              </button>
+            </div>
+>>>>>>> 63cb45066278cbe0bd9c2974b2c03b007566cb92
           ))}
         </div>
       </main>
