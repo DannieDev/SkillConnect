@@ -124,15 +124,6 @@ export default function TrabajadorHome() {
     obtenerDatosUsuario();
   }, [router]);
 
-<<<<<<< HEAD
-  useEffect(() => {
-    const fetchPublicaciones = async () => {
-      const token = localStorage.getItem('token');
-      const res = await fetch('/api/publicaciones/mias', {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      const data = await res.json();
-=======
  useEffect(() => {
   const fetchPublicaciones = async () => {
     const token = localStorage.getItem('token');
@@ -141,45 +132,40 @@ export default function TrabajadorHome() {
     });
     const data = await res.json();
 
-    // Verificación de que data es un array antes de hacer map
     if (Array.isArray(data)) {
->>>>>>> 63cb45066278cbe0bd9c2974b2c03b007566cb92
       setPublicaciones(data);
-      setLikes(data.map((pub: any) => ({
-        id: pub._id,
-        liked: false,
-        total: pub.likes || 0,
-      })));
-<<<<<<< HEAD
-    };
-    fetchPublicaciones();
-  }, []);
-=======
- } else {
-  console.error('❌ Error en publicaciones:', data?.error ?? 'Respuesta inesperada:', data);
-  setPublicaciones([]);
-}
+      setLikes(
+        data.map((pub: any) => ({
+          id: pub._id,
+          liked: false,
+          total: pub.likes || 0,
+        }))
+      );
+    } else {
+      console.error('❌ Error en publicaciones:', data?.error ?? 'Respuesta inesperada:', data);
+      setPublicaciones([]);
+    }
   };
 
   fetchPublicaciones();
 }, []);
->>>>>>> 63cb45066278cbe0bd9c2974b2c03b007566cb92
-
-  const toggleLike = (id: string) => {
-    setLikes((prev) =>
-      prev.map((l: any) =>
-        l.id === id
-          ? { ...l, liked: !l.liked, total: l.liked ? l.total - 1 : l.total + 1 }
-          : l
-      )
-    );
-  };
 
   const toggleGuardar = (id: string) => {
     setGuardados((prev) =>
       prev.includes(id) ? prev.filter((g) => g !== id) : [...prev, id]
     );
   };
+
+  const toggleLike = (id: string) => {
+  setLikes((prev) =>
+    prev.map((l: any) =>
+      l.id === id
+        ? { ...l, liked: !l.liked, total: l.liked ? l.total - 1 : l.total + 1 }
+        : l
+    )
+  );
+};
+
 
   return (
     <div className="flex h-screen overflow-hidden">

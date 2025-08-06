@@ -22,10 +22,7 @@ export default function RegisterPage() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [rol, setRol] = useState<'trabajador' | 'cliente'>('cliente');
-<<<<<<< HEAD
-=======
   const [aceptaAviso, setAceptaAviso] = useState(false);
->>>>>>> 63cb45066278cbe0bd9c2974b2c03b007566cb92
   const [error, setError] = useState('');
   const router = useRouter();
 
@@ -48,14 +45,10 @@ export default function RegisterPage() {
       return;
     }
 
-<<<<<<< HEAD
-=======
     if (!aceptaAviso) {
       setError('Debes aceptar el Aviso de Privacidad');
       return;
     }
-
->>>>>>> 63cb45066278cbe0bd9c2974b2c03b007566cb92
     try {
       const res = await fetch('/api/auth/register', {
         method: 'POST',
@@ -190,9 +183,6 @@ export default function RegisterPage() {
                   </button>
                 </div>
               </div>
-
-<<<<<<< HEAD
-=======
               {/* Checkbox Aviso de Privacidad */}
               <label className="flex items-start gap-2 text-sm mt-2">
                 <input
@@ -211,7 +201,6 @@ export default function RegisterPage() {
                 </a>
               </label>
 
->>>>>>> 63cb45066278cbe0bd9c2974b2c03b007566cb92
               <button
                 type="submit"
                 className="w-full bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 transition-colors"
@@ -220,10 +209,7 @@ export default function RegisterPage() {
               </button>
             </form>
 
-<<<<<<< HEAD
             {/* Divider */}
-=======
->>>>>>> 63cb45066278cbe0bd9c2974b2c03b007566cb92
             <div className="relative my-6">
               <div className="absolute inset-0 flex items-center">
                 <div className="w-full border-t border-gray-300"></div>

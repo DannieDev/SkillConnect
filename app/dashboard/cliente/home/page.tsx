@@ -8,20 +8,15 @@ import {
   FaBars, FaTimes, FaUser
 } from 'react-icons/fa';
 import Link from 'next/link';
-<<<<<<< HEAD
 import TarjetaServicio from '../../../components/TarjetaServicio';
-=======
->>>>>>> 63cb45066278cbe0bd9c2974b2c03b007566cb92
 
 export default function ClienteHome() {
   const router = useRouter();
   const [menuAbierto, setMenuAbierto] = useState(false);
   const [usuario, setUsuario] = useState({ nombre: 'Cargando...', email: '' });
-<<<<<<< HEAD
-=======
   const [trabajadores, setTrabajadores] = useState([]);
   const [filtro, setFiltro] = useState('');
->>>>>>> 63cb45066278cbe0bd9c2974b2c03b007566cb92
+
 
   useEffect(() => {
     const obtenerUsuario = async () => {
@@ -35,7 +30,6 @@ export default function ClienteHome() {
     obtenerUsuario();
   }, []);
 
-<<<<<<< HEAD
   const servicios = [
     { id: 1, titulo: 'Limpieza de sala', precio: 350, categoria: 'Limpieza', disponibilidad: 'Mañana', fecha: '2024-07-01', img: '/images/sala.png', trabajadorId: 'u001' },
     { id: 2, titulo: 'Instalación de mini split', precio: 800, categoria: 'Electricidad', disponibilidad: 'Tarde', fecha: '2024-07-03', img: '/images/aire-acondicionado.png', trabajadorId: 'u002' },
@@ -58,23 +52,20 @@ export default function ClienteHome() {
       (!filtros.fecha || s.fecha === filtros.fecha)
     );
   });
-=======
   useEffect(() => {
-  const fetchTrabajadores = async () => {
-    const res = await fetch('/api/trabajadores');
-    const data = await res.json();
-    setTrabajadores(data); // aquí los trabajadores reales
-  };
+    const fetchTrabajadores = async () => {
+      const res = await fetch('/api/trabajadores');
+      const data = await res.json();
+      setTrabajadores(data); // aquí los trabajadores reales
+    };
 
-  fetchTrabajadores();
-}, []);
+    fetchTrabajadores();
+  }, []);
 
- const trabajadoresFiltrados = trabajadores.filter((t: any) =>
-  t.nombre.toLowerCase().includes(filtro.toLowerCase()) ||
-  (t.especialidad || '').toLowerCase().includes(filtro.toLowerCase())
-);
->>>>>>> 63cb45066278cbe0bd9c2974b2c03b007566cb92
-
+  const trabajadoresFiltrados = trabajadores.filter((t: any) =>
+    t.nombre.toLowerCase().includes(filtro.toLowerCase()) ||
+    (t.especialidad || '').toLowerCase().includes(filtro.toLowerCase())
+  );
   return (
     <div className="relative min-h-screen bg-gray-50 lg:flex">
       {/* Menú lateral */}
@@ -134,7 +125,6 @@ export default function ClienteHome() {
         <h1 className="text-2xl font-semibold mb-1">Inicio</h1>
         <p className="text-sm text-gray-500 mb-4">¡Bienvenido{usuario?.nombre ? `, ${usuario.nombre}` : ''}!</p>
 
-<<<<<<< HEAD
         {/* Filtros */}
         <div className="flex flex-wrap gap-2 mb-6">
           <input type="text" placeholder="Buscar servicios..." className="border px-4 py-2 rounded-md text-sm w-full sm:w-auto" value={filtros.busqueda} onChange={(e) => setFiltros({ ...filtros, busqueda: e.target.value })} />
@@ -160,9 +150,11 @@ export default function ClienteHome() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {serviciosFiltrados.map((s) => (
             <TarjetaServicio key={s.id} servicio={s} />
-=======
-        {/* Filtro de búsqueda */}
-        <div className="mb-6">
+          ))}
+        </div>
+
+        {/* Filtro de búsqueda de trabajadores */}
+        <div className="mb-6 mt-10">
           <input
             type="text"
             placeholder="Buscar trabajador por nombre o profesión..."
@@ -178,7 +170,7 @@ export default function ClienteHome() {
             <div key={trab._id} className="border rounded-md p-4 shadow-sm bg-white">
               <img src={trab.avatar || '/images/user.jpg'} alt={trab.nombre} className="w-16 h-16 rounded-full mb-2" />
               <h2 className="text-lg font-semibold">{trab.nombre}</h2>
-<p className="text-sm text-gray-600">{trab.especialidad || 'Sin especialidad'}</p>
+              <p className="text-sm text-gray-600">{trab.especialidad || 'Sin especialidad'}</p>
               <button
                 onClick={async () => {
                   try {
@@ -201,7 +193,6 @@ export default function ClienteHome() {
                 Enviar mensaje
               </button>
             </div>
->>>>>>> 63cb45066278cbe0bd9c2974b2c03b007566cb92
           ))}
         </div>
       </main>
