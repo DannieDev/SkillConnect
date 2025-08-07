@@ -12,11 +12,20 @@ import Image from 'next/image';
 import { FcGoogle } from 'react-icons/fc';
 import { FaGithub } from 'react-icons/fa';
 
+interface UsuarioResponse {
+  token: string;
+  usuario: {
+    tipo: 'trabajador' | 'cliente';
+  };
+  message?: string;
+  error?: string;
+}
+
 export default function LoginPage() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
   const [tipo, setTipo] = useState<'trabajador' | 'cliente'>('trabajador');
-  const [error, setError] = useState('');
+  const [error, setError] = useState<string>('');
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -40,7 +49,7 @@ export default function LoginPage() {
         body: JSON.stringify({ email, password, tipo })
       });
 
-      const data = await res.json();
+      const data: UsuarioResponse = await res.json();
 
       if (!res.ok) {
         setError(data.message || data.error || 'Credenciales incorrectas');
@@ -50,8 +59,11 @@ export default function LoginPage() {
       localStorage.setItem('token', data.token);
       localStorage.setItem('rol', data.usuario.tipo);
 
-      router.push(data.usuario.tipo === 'trabajador' ? '/dashboard/trabajador' : '/dashboard/cliente/home');
-
+      router.push(
+        data.usuario.tipo === 'trabajador'
+          ? '/dashboard/trabajador'
+          : '/dashboard/cliente/home'
+      );
     } catch (err) {
       console.error(err);
       setError('Hubo un error con el servidor');
@@ -112,6 +124,7 @@ export default function LoginPage() {
                 <input
                   type="checkbox"
                   className="h-4 w-4 text-blue-600 border-gray-300 rounded"
+                  onChange={() => {}} // Para evitar advertencias de TS
                 />
                 Recuérdame
               </label>
