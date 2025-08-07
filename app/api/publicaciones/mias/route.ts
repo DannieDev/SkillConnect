@@ -3,12 +3,17 @@ import { verifyToken } from '@/middlewares/verifyToken';
 import dbConnect from '@/lib/dbConnect';
 import Publicacion from '@/models/publicacion';
 
+interface DecodedToken {
+  id: string;
+  tipo: 'trabajador' | 'cliente';
+}
+
 export async function GET(req: Request) {
   try {
     await dbConnect();
 
-    const decoded = verifyToken(req);
-    if ((decoded as any).tipo !== 'trabajador') {
+    const decoded = verifyToken(req) as DecodedToken;
+    if (decoded.tipo !== 'trabajador') {
       return NextResponse.json({ error: 'No autorizado' }, { status: 403 });
     }
 
@@ -17,8 +22,9 @@ export async function GET(req: Request) {
     }).sort({ createdAt: -1 });
 
     return NextResponse.json(publicaciones);
-  } catch (err: any) {
-    console.error('❌ Error en GET /publicaciones/mias:', err.message);
-    return NextResponse.json({ error: err.message }, { status: 500 });
+  } catch (err: unknown) {
+    const error = err as Error;
+    console.error('❌ Error en GET /publicaciones/mias:', error.message);
+    return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }

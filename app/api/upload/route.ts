@@ -19,18 +19,19 @@ export async function POST(req: Request) {
 
     const buffer = Buffer.from(await file.arrayBuffer());
 
-    const result = await new Promise<{ secure_url: string }>((resolve, reject) => {
+    const result: { secure_url: string } = await new Promise((resolve, reject) => {
       cloudinary.uploader.upload_stream(
         { folder: `usuarios/${usuarioId}`, resource_type: 'image' },
-        (error, result) => {
-          if (error || !result) return reject(error);
+        (error: Error | undefined, result: { secure_url?: string } | undefined) => {
+          if (error || !result?.secure_url) return reject(error);
           resolve({ secure_url: result.secure_url });
         }
       ).end(buffer);
     });
 
     return NextResponse.json({ secure_url: result.secure_url });
-  } catch (error: any) {
+  } catch (err: unknown) {
+    const error = err as Error;
     console.error('❌ Error en subida de imagen:', error.message);
     return NextResponse.json({ error: 'Error al subir imagen' }, { status: 500 });
   }

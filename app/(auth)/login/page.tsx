@@ -24,7 +24,7 @@ interface UsuarioResponse {
 export default function LoginPage() {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
-  const [tipo, setTipo] = useState<'trabajador' | 'cliente'>('trabajador');
+  const [tipo] = useState<'trabajador' | 'cliente'>('trabajador');
   const [error, setError] = useState<string>('');
   const router = useRouter();
 

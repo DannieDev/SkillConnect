@@ -12,7 +12,8 @@ export async function subirImagen(filePath: string, userId: string): Promise<Upl
       folder: `usuarios/${userId}`,
     });
     return result;
-  } catch (error: any) {
+  } catch (err: unknown) {
+    const error = err as Error;
     console.error('Error detallado de Cloudinary:', error);
     throw new Error('Error al subir imagen a Cloudinary: ' + (error.message || 'Sin mensaje'));
   }

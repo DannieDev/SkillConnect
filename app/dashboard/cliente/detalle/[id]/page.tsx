@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { servicios } from '../../../../data/servicios';
-import { FaArrowLeft, FaHeart, FaRegHeart, FaRegCalendarAlt, FaPaperPlane } from 'react-icons/fa';
+import { FaArrowLeft, FaHeart, FaRegHeart, FaRegCalendarAlt} from 'react-icons/fa';
 import Resenas from '../../../../components/resenas';
 
 export default function DetalleServicio() {

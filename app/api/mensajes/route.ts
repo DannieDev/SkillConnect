@@ -20,7 +20,7 @@ export async function POST(req: Request) {
 
     const mensajeCompleto = await nuevo.populate('de');
     return NextResponse.json(mensajeCompleto);
-  } catch (error) {
+  } catch (error: unknown) {
     return NextResponse.json({ error: 'Error al enviar mensaje' }, { status: 500 });
   }
 }

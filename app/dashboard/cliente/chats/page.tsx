@@ -113,7 +113,7 @@ export default function ChatsClientePage() {
             className={`flex items-center gap-3 p-3 rounded-lg cursor-pointer hover:bg-gray-100 transition 
               ${selectedChat.id === chat.id ? "bg-gray-100" : ""}`}
           >
-            <img src={chat.avatar} className="w-10 h-10 rounded-full object-cover" />
+            <img src={chat.avatar} alt= "" className="w-10 h-10 rounded-full object-cover" />
             <div className="flex-1">
               <div className="flex justify-between items-center text-sm">
                 <span className="font-semibold text-gray-800">{chat.nombre}</span>
@@ -143,6 +143,7 @@ export default function ChatsClientePage() {
               <FaBars />
             </button>
             <img
+            alt=""
               src={selectedChat.avatar}
               className="w-10 h-10 rounded-full object-cover"
             />

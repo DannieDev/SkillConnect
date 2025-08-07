@@ -110,7 +110,7 @@ export default function MensajesPage() {
               }}
               className={`flex items-center gap-3 p-3 rounded-lg cursor-pointer hover:bg-gray-100 transition ${selectedChat?._id === chat._id ? "bg-gray-100" : ""}`}
             >
-              <img src="/images/avatar_default.png" className="w-10 h-10 rounded-full object-cover" />
+              <img src="/images/avatar_default.png" alt="" className="w-10 h-10 rounded-full object-cover" />
               <div className="flex-1">
                 <div className="flex justify-between text-sm">
                   <span className="font-semibold text-gray-800">{otroParticipante?.nombre || "Usuario"}</span>
@@ -132,7 +132,7 @@ export default function MensajesPage() {
             </a>
             {selectedChat && (
               <>
-                <img src="/images/avatar_default.png" className="w-10 h-10 rounded-full object-cover" />
+                <img src="/images/avatar_default.png" alt="" className="w-10 h-10 rounded-full object-cover" />
                 <div>
                   <p className="font-semibold text-gray-800">
                     {selectedChat.participantes.find((p: any) => p._id !== userId)?.nombre || "Usuario"}

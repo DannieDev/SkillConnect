@@ -107,7 +107,7 @@ export default function TrabajadorHome() {
   const [likes, setLikes] = useState<any[]>([]);
   const [guardados, setGuardados] = useState<string[]>([]);
   const [mostrarMensajes, setMostrarMensajes] = useState(false);
-  const [mensaje, setMensaje] = useState('');
+  const [setMensaje] = useState('');
   const [menuAbierto, setMenuAbierto] = useState(false);
 
   useEffect(() => {
@@ -350,14 +350,14 @@ export default function TrabajadorHome() {
           </div>
           <div className="max-h-80 overflow-y-auto bg-[#1c1c1e]">
             <div className="hover:bg-[#2c2c2e] px-4 py-3 cursor-pointer flex gap-4 items-center">
-              <img src="/images/editables/chat.jpg" className="w-10 h-10 rounded-full" />
+              <img src="/images/editables/chat.jpg" alt="" className="w-10 h-10 rounded-full" />
               <div>
                 <p className="font-semibold text-sm text-white">Lazaro.J3</p>
                 <p className="text-xs text-gray-400 truncate">Tú: Nada de andar en las chelas · 1 sem</p>
               </div>
             </div>
             <div className="hover:bg-[#2c2c2e] px-4 py-3 cursor-pointer flex gap-4 items-center">
-              <img src="/images/editables/chat2.jpg" className="w-10 h-10 rounded-full" />
+              <img src="/images/editables/chat2.jpg" alt="" className="w-10 h-10 rounded-full" />
               <div>
                 <p className="font-bold text-sm text-white">EFRABY</p>
                 <p className="text-xs text-gray-400 truncate">EFRABY envió un archivo adjunto · 5 sem</p>

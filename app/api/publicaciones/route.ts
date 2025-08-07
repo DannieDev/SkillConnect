@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { verifyToken } from '@/middlewares/verifyToken';
 import { subirImagen } from '@/lib/uploadImage';
 import { crearPublicacion } from '@/services/publicacionService';
-import formidable from 'formidable';
+import formidable, { Fields, Files } from 'formidable';
 import { Readable } from 'stream';
 
 export const config = {
@@ -11,13 +11,19 @@ export const config = {
   },
 };
 
-function parseForm(req: Request, headers: Headers): Promise<[any, any]> {
-  return new Promise(async (resolve, reject) => {
+interface DecodedToken {
+  id: string;
+  tipo: 'trabajador' | 'cliente';
+}
+
+function parseForm(req: Request, headers: Headers): Promise<[Fields, Files]> {
+  return new Promise((resolve, reject) => {
     const form = formidable({ multiples: false, keepExtensions: true });
 
-    const stream = Readable.fromWeb(req.body as any); // Convierte el body en stream
-    const nodeReq: any = stream;
-    nodeReq.headers = Object.fromEntries(headers.entries()); // ✅ headers manuales
+    const stream = Readable.fromWeb(req.body as unknown as ReadableStream);
+    const nodeReq = Object.assign(stream, {
+      headers: Object.fromEntries(headers.entries())
+    });
 
     form.parse(nodeReq, (err, fields, files) => {
       if (err) return reject(err);
@@ -28,8 +34,8 @@ function parseForm(req: Request, headers: Headers): Promise<[any, any]> {
 
 export async function POST(req: Request) {
   try {
-    const decoded = verifyToken(req);
-    const userId = (decoded as any).id;
+    const decoded = verifyToken(req) as DecodedToken;
+    const userId = decoded.id;
 
     const [fields, files] = await parseForm(req, req.headers);
 
@@ -42,25 +48,26 @@ export async function POST(req: Request) {
     const file = files.imagen?.[0];
 
     if (!titulo || !descripcion || !precio || !disponibilidad || !fecha || !file) {
-      return NextResponse.json({ error: 'Faltan campos obligatorios' }, { status: 400 });
+      return NextResponse.json({ error: 'Campos obligatorios faltantes' }, { status: 400 });
     }
 
-    const subida = await subirImagen(file.filepath, userId);
-    const nueva = await crearPublicacion({
+    const urlImagen = await subirImagen(file as File);
 
+    const nuevaPublicacion = await crearPublicacion({
       titulo,
       descripcion,
       precio,
       disponibilidad,
       fecha,
       categoria,
-      imagen: subida.secure_url,
-      trabajadorId: userId,
+      imagen: urlImagen,
+      trabajadorId: userId
     });
 
-    return NextResponse.json(nueva, { status: 201 });
-  } catch (err: any) {
-    console.error('❌ Error al crear publicación:', err);
-    return NextResponse.json({ error: err.message }, { status: 500 });
+    return NextResponse.json(nuevaPublicacion);
+  } catch (err: unknown) {
+    const error = err as Error;
+    console.error('❌ Error al crear publicación:', error.message);
+    return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }

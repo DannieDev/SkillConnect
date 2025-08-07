@@ -1,30 +1,34 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import Publicacion from '@/models/publicacion';
 import { verifyToken } from '@/middlewares/verifyToken';
-import { verify } from 'jsonwebtoken';
+import { verify, JwtPayload } from 'jsonwebtoken';
 import connectDB from '@/lib/dbConnect';
 
+interface DecodedToken extends JwtPayload {
+  id: string;
+  tipo: 'trabajador' | 'cliente';
+}
 
 // DELETE /api/publicaciones/[id]
 export async function DELETE(
-  req: NextRequest,
+  req: Request,
   context: { params: { id: string } }
 ) {
-  const { id } = context.params; // ✅ así accedes a params.id
+  const { id } = context.params;
 
   const token = req.headers.get('Authorization')?.replace('Bearer ', '');
   if (!token) {
     return NextResponse.json({ error: 'No autorizado' }, { status: 401 });
   }
 
-  let decoded;
+  let decoded: DecodedToken;
   try {
-    decoded = verify(token, process.env.JWT_SECRET!);
+    decoded = verify(token, process.env.JWT_SECRET!) as DecodedToken;
   } catch {
     return NextResponse.json({ error: 'Token inválido' }, { status: 401 });
   }
 
-  const userId = (decoded as any).id;
+  const userId = decoded.id;
 
   const publicacion = await Publicacion.findById(id);
   if (!publicacion || publicacion.trabajadorId.toString() !== userId) {
@@ -38,38 +42,15 @@ export async function DELETE(
 // GET /api/publicaciones/[id]
 export async function GET(req: Request, { params }: { params: { id: string } }) {
   await connectDB();
-  const decoded = verifyToken(req);
-  const userId = (decoded as any).id;
+
+  const decoded = verifyToken(req) as DecodedToken;
+  const userId = decoded.id;
 
   const publicacion = await Publicacion.findById(params.id);
 
   if (!publicacion || publicacion.trabajadorId.toString() !== userId) {
     return NextResponse.json({ error: 'No autorizado' }, { status: 403 });
   }
-
-  return NextResponse.json(publicacion);
-}
-
-// PUT /api/publicaciones/[id]
-export async function PUT(req: Request, { params }: { params: { id: string } }) {
-  await connectDB();
-  const decoded = verifyToken(req);
-  const userId = (decoded as any).id;
-
-  const body = await req.json();
-  const { descripcion, categoria, imagen } = body;
-
-  const publicacion = await Publicacion.findById(params.id);
-
-  if (!publicacion || publicacion.trabajadorId.toString() !== userId) {
-    return NextResponse.json({ error: 'No autorizado' }, { status: 403 });
-  }
-
-  publicacion.descripcion = descripcion;
-  publicacion.categoria = categoria;
-  publicacion.imagen = imagen;
-
-  await publicacion.save();
 
   return NextResponse.json(publicacion);
 }
