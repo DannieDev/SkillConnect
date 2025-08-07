@@ -2,47 +2,43 @@ import { NextResponse } from 'next/server';
 import connectDB from '@/lib/dbConnect';
 import Mensaje from '@/models/mensaje';
 
+interface MensajeBody {
+  conversacionId: string;
+  autorId: string;
+  contenido: string;
+}
+
 export async function POST(req: Request) {
   try {
     await connectDB();
-    const { conversacionId, contenido, de } = await req.json();
 
-    // ❗ Validación para evitar guardar mensajes vacíos
-    if (!contenido || contenido.trim() === '') {
-      return NextResponse.json({ error: 'El contenido del mensaje está vacío' }, { status: 400 });
-    }
+    const body: MensajeBody = await req.json();
+    const { conversacionId, autorId, contenido } = body;
 
-    const nuevo = await Mensaje.create({
+    const nuevoMensaje = await Mensaje.create({
       conversacion: conversacionId,
-      contenido: contenido.trim(), // ✂️ limpiamos espacios
-      de
+      autor: autorId,
+      contenido
     });
 
-    const mensajeCompleto = await nuevo.populate('de');
-    return NextResponse.json(mensajeCompleto);
+    return NextResponse.json(nuevoMensaje);
   } catch (error: unknown) {
-    return NextResponse.json({ error: 'Error al enviar mensaje' }, { status: 500 });
+    console.error('❌ Error en POST /mensajes:', error);
+    return NextResponse.json({ error: 'Error al crear mensaje' }, { status: 500 });
   }
 }
 
-
-export async function GET(req: Request) {
+export async function GET() {
   try {
     await connectDB();
-    const url = new URL(req.url || '');
-    const conversacionId = url.searchParams.get('conversacionId');
 
-    if (!conversacionId) {
-      return NextResponse.json({ error: 'ID de conversación requerido' }, { status: 400 });
-    }
-
-    const mensajes = await Mensaje.find({ conversacion: conversacionId })
-      .populate('de')
-      .sort({ creadoEn: 1 });
+    const mensajes = await Mensaje.find()
+      .populate('autor')
+      .populate('conversacion');
 
     return NextResponse.json(mensajes);
-  } catch {
+  } catch (error: unknown) {
+    console.error('❌ Error en GET /mensajes:', error);
     return NextResponse.json({ error: 'Error al obtener mensajes' }, { status: 500 });
   }
 }
-

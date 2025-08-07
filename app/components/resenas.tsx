@@ -7,10 +7,18 @@ interface Props {
   nombreAutor: string
 }
 
+interface Resena {
+  _id: string
+  nombreAutor: string
+  calificacion: number
+  comentario: string
+  fecha: string
+}
+
 export default function Resenas({ idServicio, autorId, nombreAutor }: Props) {
   const [comentario, setComentario] = useState('')
   const [calificacion, setCalificacion] = useState(5)
-  const [resenas, setResenas] = useState<any[]>([])
+  const [resenas, setResenas] = useState<Resena[]>([])
 
   useEffect(() => {
     if (!idServicio) return
